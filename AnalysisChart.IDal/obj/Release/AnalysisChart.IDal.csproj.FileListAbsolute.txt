@@ -1,0 +1,7 @@
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Release\AnalysisChart.IDal.dll
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Release\AnalysisChart.IDal.pdb
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Release\AnalysisChart.Model.dll
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Release\AnalysisChart.Model.pdb
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Release\AnalysisChart.IDal.csprojResolveAssemblyReference.cache
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Release\AnalysisChart.IDal.dll
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Release\AnalysisChart.IDal.pdb
