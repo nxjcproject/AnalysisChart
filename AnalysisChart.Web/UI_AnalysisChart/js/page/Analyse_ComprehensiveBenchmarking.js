@@ -298,7 +298,7 @@ function InitializeStandardGrid(myGridId, myData) {
             //var m_SelectedTabId = GetTabIdByTitle(m_SelectedTabTitle);
             var m_SameTimeOfLastCyc = $("input[id='Checkbox_LastYearSameTime']:checked").val(); //是否同期
             var m_NewRow = {
-                'TagItemId': rowData.StandardItemId, 'TagItemName': rowData.Name,
+                'TagItemId': rowData.StandardItemId, 'TagItemName': rowData.StandardName + ">>" + rowData.Name,
                 'TagId': rowData.StandardItemId, 'TagStaticsType': "1",
                 'TagTable': "", 'TagDataBase': "", 'TagDescription': rowData.StandardName,
                 'TagTabClass': "ComparableStandard", 'SameTimeOfLastCyc': m_SameTimeOfLastCyc, 'OtherInfo': rowData.StandardValue
@@ -322,6 +322,7 @@ function GetTagInfo(myRowData, myDcsDataBaseName, myDcsOrganizationId) {
         };
         AddChartTags(m_NewRow);
     }
+
     var m_NewRow = {
         'TagItemId': myRowData.VariableName, 'TagItemName': myRowData.VariableDescription,
         'TagId': myRowData.FieldName, 'TagStaticsType': "2",
@@ -570,7 +571,7 @@ function RemoveDataTagGroupById(myId) {
 
 function ExportFileFun() {
     var m_FunctionName = "ExcelStream";
-    var m_Parameter1 = GetDataGridTableHtml("Windows0_Grid", "综合对标数据", SelectDatetime);
+    var m_Parameter1 = GetDataGridTableHtmlSplitColumn("Windows0_Grid", "综合对标数据", SelectDatetime, ">>", "RowName");
     var m_Parameter2 = "综合对标数据";
 
     var m_ReplaceAlllt = new RegExp("<", "g");

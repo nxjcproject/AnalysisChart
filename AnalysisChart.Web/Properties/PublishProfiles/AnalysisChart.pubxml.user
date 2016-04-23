@@ -11,19 +11,19 @@
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/AnalysisChart.Bll.dll">
-      <publishTime>10/19/2015 15:15:16</publishTime>
+      <publishTime>03/11/2016 09:01:10</publishTime>
     </File>
     <File Include="bin/AnalysisChart.DalFactory.dll">
-      <publishTime>10/19/2015 15:15:15</publishTime>
+      <publishTime>03/11/2016 09:01:09</publishTime>
     </File>
     <File Include="bin/AnalysisChart.IDal.dll">
-      <publishTime>10/19/2015 15:15:15</publishTime>
+      <publishTime>03/11/2016 09:01:08</publishTime>
     </File>
     <File Include="bin/AnalysisChart.Model.dll">
-      <publishTime>09/23/2015 22:07:04</publishTime>
+      <publishTime>03/11/2016 09:01:08</publishTime>
     </File>
     <File Include="bin/AnalysisChart.Web.dll">
-      <publishTime>10/19/2015 15:15:17</publishTime>
+      <publishTime>03/11/2016 09:01:11</publishTime>
     </File>
     <File Include="bin/AutoMapper.dll">
       <publishTime>03/28/2015 18:10:18</publishTime>
@@ -52,6 +52,9 @@
     <File Include="bin/mDbDataAdaper.dll">
       <publishTime>11/03/2014 00:58:52</publishTime>
     </File>
+    <File Include="bin/RunIndicators.dll">
+      <publishTime>03/10/2016 22:35:41</publishTime>
+    </File>
     <File Include="bin/Spring.Core.dll">
       <publishTime>08/03/2009 17:12:58</publishTime>
     </File>
@@ -65,10 +68,10 @@
       <publishTime>01/02/2015 10:45:46</publishTime>
     </File>
     <File Include="bin/UpDownLoadFiles.dll">
-      <publishTime>10/12/2015 23:55:59</publishTime>
+      <publishTime>10/25/2015 10:37:03</publishTime>
     </File>
     <File Include="bin/WebStyleBaseForEnergy.dll">
-      <publishTime>10/03/2015 12:03:24</publishTime>
+      <publishTime>01/12/2016 15:11:14</publishTime>
     </File>
     <File Include="bin/WebUserContorls.Web.dll">
       <publishTime>10/11/2015 21:53:56</publishTime>
@@ -83,16 +86,16 @@
       <publishTime>07/16/2014 14:15:46</publishTime>
     </File>
     <File Include="css/common/NormalPage.css">
-      <publishTime>09/18/2014 14:21:40</publishTime>
+      <publishTime>01/25/2016 15:56:08</publishTime>
     </File>
     <File Include="js/common/components/Charts.js">
-      <publishTime>06/15/2015 11:59:42</publishTime>
+      <publishTime>01/25/2016 16:42:13</publishTime>
     </File>
     <File Include="js/common/components/DataGrid.js">
       <publishTime>01/12/2015 19:08:54</publishTime>
     </File>
     <File Include="js/common/components/GridChart.js">
-      <publishTime>01/20/2015 22:03:38</publishTime>
+      <publishTime>01/25/2016 23:09:01</publishTime>
     </File>
     <File Include="js/common/components/WindowsDialog.js">
       <publishTime>01/20/2015 23:53:48</publishTime>
@@ -104,7 +107,7 @@
       <publishTime>01/15/2015 11:01:16</publishTime>
     </File>
     <File Include="js/common/PrintFile.js">
-      <publishTime>10/19/2015 15:04:30</publishTime>
+      <publishTime>11/02/2015 09:19:14</publishTime>
     </File>
     <File Include="lib/ealib/changelog.txt">
       <publishTime>10/16/2014 10:49:22</publishTime>
@@ -4592,7 +4595,7 @@
       <publishTime>08/22/2014 18:18:56</publishTime>
     </File>
     <File Include="UI_AnalysisChart/Analyse_BenchmarkingBySameType.aspx">
-      <publishTime>10/15/2015 15:33:06</publishTime>
+      <publishTime>01/25/2016 22:40:52</publishTime>
     </File>
     <File Include="UI_AnalysisChart/Analyse_ComprehensiveBenchmarking.aspx">
       <publishTime>10/15/2015 22:25:07</publishTime>
@@ -4601,7 +4604,7 @@
       <publishTime>01/09/2015 14:11:20</publishTime>
     </File>
     <File Include="UI_AnalysisChart/Analyse_EntityBenchmarking.aspx">
-      <publishTime>10/15/2015 22:43:57</publishTime>
+      <publishTime>10/26/2015 00:03:50</publishTime>
     </File>
     <File Include="UI_AnalysisChart/Analyse_ProductionLine.aspx">
       <publishTime>02/08/2015 16:38:58</publishTime>
@@ -4610,16 +4613,16 @@
       <publishTime>07/02/2015 18:40:47</publishTime>
     </File>
     <File Include="UI_AnalysisChart/js/page/Analyse_BenchmarkingBySameType.js">
-      <publishTime>10/15/2015 21:31:02</publishTime>
+      <publishTime>11/02/2015 15:11:04</publishTime>
     </File>
     <File Include="UI_AnalysisChart/js/page/Analyse_ComprehensiveBenchmarking.js">
-      <publishTime>10/15/2015 22:56:11</publishTime>
+      <publishTime>10/26/2015 01:11:01</publishTime>
     </File>
     <File Include="UI_AnalysisChart/js/page/Analyse_EnergyPredit.js">
       <publishTime>01/02/2015 19:58:08</publishTime>
     </File>
     <File Include="UI_AnalysisChart/js/page/Analyse_EntityBenchmarking.js">
-      <publishTime>10/15/2015 22:43:57</publishTime>
+      <publishTime>10/26/2015 01:07:40</publishTime>
     </File>
     <File Include="UI_AnalysisChart/js/page/Analyse_ProductionLine.js">
       <publishTime>02/08/2015 16:36:59</publishTime>
@@ -4636,8 +4639,20 @@
     <File Include="UI_HistoryTrend/js/page/HistoryTrend_DCS.js">
       <publishTime>05/26/2015 14:43:48</publishTime>
     </File>
+    <File Include="UI_ProductionChart/Analyse_ProductionHorizontalComparison.aspx">
+      <publishTime>03/09/2016 23:19:28</publishTime>
+    </File>
+    <File Include="UI_ProductionChart/Analyse_ProductionLongitudinalComparison.aspx">
+      <publishTime>03/10/2016 15:13:49</publishTime>
+    </File>
+    <File Include="UI_ProductionChart/js/page/Analyse_ProductionHorizontalComparison.js">
+      <publishTime>03/10/2016 16:29:42</publishTime>
+    </File>
+    <File Include="UI_ProductionChart/js/page/Analyse_ProductionLongitudinalComparison.js">
+      <publishTime>03/10/2016 17:37:28</publishTime>
+    </File>
     <File Include="Web.config">
-      <publishTime>10/19/2015 15:15:26</publishTime>
+      <publishTime>03/11/2016 09:01:24</publishTime>
     </File>
   </ItemGroup>
 </Project>

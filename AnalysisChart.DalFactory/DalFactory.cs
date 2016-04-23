@@ -73,7 +73,7 @@ namespace AnalysisChart.DalFactory
             return m_IAnalysisKPI_EntityBenchmarkingObj;
         }
         /// <summary>
-        /// 产生一个实例,综合电耗对
+        /// 产生一个实例,综合电耗对标
         /// </summary>
         /// <returns>返回实例类型</returns>
         public static IAnalyse_ComprehensiveBenchmarking GetComprehensiveBenchmarkingInstance()
@@ -82,6 +82,17 @@ namespace AnalysisChart.DalFactory
             IAnalyse_ComprehensiveBenchmarking m_IAnalyse_ComprehensiveBenchmarkingObj = (IAnalyse_ComprehensiveBenchmarking)GetDataObject(m_Type + ".Analyse_ComprehensiveBenchmarking");
             //m_IHistoryTrendObj.InitializeDbConn();
             return m_IAnalyse_ComprehensiveBenchmarkingObj;
+        }
+        /// <summary>
+        /// 产生一个实例,生产指标横比对标
+        /// </summary>
+        /// <returns>返回实例类型</returns>
+        public static IAnalyse_ProductionHorizontalComparison GetProductionHorizontalComparisonInstance()
+        {
+            string m_Type = ConfigurationManager.AppSettings["AnalysisChart"];
+            IAnalyse_ProductionHorizontalComparison m_Analyse_ProductionHorizontalComparisonObj = (IAnalyse_ProductionHorizontalComparison)GetDataObject(m_Type + ".Analyse_ProductionHorizontalComparison");
+            //m_IHistoryTrendObj.InitializeDbConn();
+            return m_Analyse_ProductionHorizontalComparisonObj;
         }
     }
 }

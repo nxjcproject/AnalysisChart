@@ -12,6 +12,7 @@ namespace AnalysisChart.Web.UI_AnalysisChart
     public partial class Analyse_BenchmarkingBySameType : WebStyleBaseForEnergy.webStyleBase
     {
         private const string KPIName = "EntityBenchmarkingKPI";
+        private const string StandardType = "Energy";
         protected void Page_Load(object sender, EventArgs e)
         {
             base.InitComponts();
@@ -47,7 +48,7 @@ namespace AnalysisChart.Web.UI_AnalysisChart
         {
             List<string> m_DataValidIdGroup = GetDataValidIdGroup("ProductionOrganization");   //数据授权
             List<string> m_OrganizationIdList = AnalysisChart.Bll.Analyse_KPICommon.GetAllParentIdAndChildrenIdByIds(m_DataValidIdGroup);
-            string m_IndexTagJson = AnalysisChart.Bll.Analyse_KPICommon.GetStandardItems(myStatisticalMethod, myValueType, m_OrganizationIdList);
+            string m_IndexTagJson = AnalysisChart.Bll.Analyse_KPICommon.GetStandardItems(myStatisticalMethod, myValueType, StandardType, m_OrganizationIdList);
             return m_IndexTagJson;
         }
         [WebMethod]

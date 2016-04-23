@@ -26,7 +26,7 @@ namespace AnalysisChart.IDal
         /// <param name="myValueType">计算类型</param>
         /// <param name="myOrganizations">组织机构</param>
         /// <returns>对标标准项表</returns>
-        DataTable GetStandardItems(string myStatisticalMethod, string myValueType, List<string> myOrganizations);
+        DataTable GetStandardItems(string myStatisticalMethod, string myValueType, string myStandardType, List<string> myOrganizations);
         /// <summary>
         /// 统计综合电耗标准项
         /// </summary>

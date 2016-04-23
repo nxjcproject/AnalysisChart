@@ -52,6 +52,10 @@
     <Reference Include="EnergyConsumption">
       <HintPath>..\..\Lib\EnergyConsumption.dll</HintPath>
     </Reference>
+    <Reference Include="RunIndicators, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\组件\RunIndicators\RunIndicators\bin\Debug\RunIndicators.dll</HintPath>
+    </Reference>
     <Reference Include="SqlServerDataAdapter">
       <HintPath>..\..\BasicData(临时生成趋势)\SqlServerDataAdapter.dll</HintPath>
     </Reference>
@@ -81,6 +85,8 @@
     <Compile Include="Analyse_BenchmarkingBySameType.cs" />
     <Compile Include="Analyse_ComprehensiveBenchmarking.cs" />
     <Compile Include="Analyse_KPICommon.cs" />
+    <Compile Include="Analyse_ProductionHorizontalComparison.cs" />
+    <Compile Include="Analyse_ProductionLongitudinalComparison.cs" />
     <Compile Include="AnalysisKPI_EntityBenchmarking.cs" />
     <Compile Include="EnergyPredit.cs" />
     <Compile Include="HistoryTrend.cs" />

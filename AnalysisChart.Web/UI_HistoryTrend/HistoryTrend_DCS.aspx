@@ -112,8 +112,7 @@
     </div>
 
     <form id="form_HistoryTrend_DCS" runat="server">
-        <div id="dlg_SelectDcsTags" class="easyui-dialog" style="width:600px;height:300px"
-                                                    data-options="iconCls:'icon-search',resizable:false,modal:true">       
+        <div id="dlg_SelectDcsTags" class="easyui-dialog" data-options="iconCls:'icon-search',resizable:false,modal:true">       
             <uc1:TagsSelector_Dcs ID="TagsSelector_DcsTags" runat="server" />
         </div>
     </form>

@@ -68,7 +68,7 @@ namespace AnalysisChart.Dal
                 return "";
             }
         }
-        public DataTable GetStandardItems(string myStatisticalMethod, string myValueType, List<string> myOrganizations)
+        public DataTable GetStandardItems(string myStatisticalMethod, string myValueType, string myStandardType, List<string> myOrganizations)
         {
             string m_Sql = @"Select 
                                 B.StandardItemId as StandardItemId, 
@@ -88,8 +88,9 @@ namespace AnalysisChart.Dal
                                 and A.KeyId = B.KeyId
                                 and B.Enabled = 1 
                                 and B.ValueType = '{1}'
+                                and B.StandardType = '{2}'
                                 and (B.OrganizationID is null 
-                                or B.OrganizationID in ({2}))
+                                or B.OrganizationID in ({3}))
                                 order by A.DisplayIndex, B.StandardLevel";
             string m_SqlCondition = "";
             if (myOrganizations != null)
@@ -109,7 +110,7 @@ namespace AnalysisChart.Dal
 
             try
             {
-                m_Sql = string.Format(m_Sql, myStatisticalMethod, myValueType, m_SqlCondition);
+                m_Sql = string.Format(m_Sql, myStatisticalMethod, myValueType, myStandardType, m_SqlCondition);
                 DataSet mDataSet_StandardItems = m_DbDataAdapter.MySqlDbDataAdaper.Fill(null, m_Sql, "StandardItemsTable");
                 return mDataSet_StandardItems.Tables["StandardItemsTable"];
             }

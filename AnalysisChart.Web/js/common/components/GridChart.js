@@ -23,7 +23,8 @@ function GetGridObjById(myGridObjContainerId, myData, myTitle) {
     }
     else {
         /////////////////////////////////////////////已经加载过一次////////////////////////////////
-        //GridObjArray[m_ExistsIndex].datagrid('loadData', myData);
+        //GridObjArray[m_ExistsIndex].datagrid('loadData', myData.rows);
+        InitializeGrid(GridObjArray[m_ExistsIndex][0].id, myData);
     }
 }
 /////////////////////////////获得chart/////////////////////////
@@ -90,21 +91,21 @@ function ReleaseAllGridChartObj(myChartContainerId) {
 }
 function ChangeSize(myContainerId) {
     var m_ContainerObj = $('#' + myContainerId);
-    var m_GridHeight = parseInt(m_ContainerObj.height() * 0.4);
-    $('#' + myContainerId + '_GridPanel').panel('resize', { height: m_GridHeight });
+    m_ContainerObj.empty();
 }
 //////////////////////////////////////////增加Grid与Chart//////////////////////////
 function CreateGridChart(myData, myContainerId, myIsShowGrid, myChartType) {
     var m_ContainerObj = $('#' + myContainerId);
     var m_WindowsHtml = ''
+    var m_GridHeight = 0;
     if (myIsShowGrid == true) {
-        var m_GridHeight = parseInt(m_ContainerObj.height() * 0.4);
+        m_GridHeight = parseInt(m_ContainerObj.height() * 0.4);
         var m_ChartHeight = parseInt(m_ContainerObj.height() * 0.5);
-        m_WindowsHtml = '<div class="easyui-layout" data-options="fit:true,border:false">' +
+        m_WindowsHtml = '<div id = "' + myContainerId + '_WindowsLayout" class="easyui-layout" data-options="fit:true,border:false">' +
                 '<div id="' + myContainerId + '_GridPanel" class="easyui-panel" data-options="region:\'north\',border:true, collapsible:false, split:false" style="height:' + m_GridHeight + 'px;">' +
 		            '<table id="' + myContainerId + '_Grid" data-options="fit:true,border:false"></table>' +
 	            '</div>' +
-                '<div id = "' + myContainerId + '_Chart" class="easyui-panel" data-options="region:\'center\',border:false" style="margin-left:20px;width:100px; padding-right:110px;height:' + m_ChartHeight + 'px;padding-bottom:10px;">' +
+                '<div class="easyui-panel" data-options="region:\'center\',border:false,fit:true" style="font-size:8pt; padding:5px; margin:0px;">' +
 	            '</div>' +
             '</div>';
         /*
@@ -133,16 +134,33 @@ function CreateGridChart(myData, myContainerId, myIsShowGrid, myChartType) {
         //$('#' + myContainerId + "_GridPanel").append("<table></table>");
     }
     else {
-        m_WindowsHtml = '<div class="easyui-layout" data-options="fit:true,border:false">' +
-                '<div id = "' + myContainerId + '_Chart" class="easyui-panel" data-options="region:\'center\',border:false,fit:true" style="margin-left:20px;padding-right:100px;padding-bottom:10px;">' +
-	            '</div>' +
+        m_WindowsHtml = '<div id = "' + myContainerId + '_WindowsLayout" class="easyui-layout" data-options="fit:true,border:false">' +
+                '<div class="easyui-panel" data-options="region:\'center\',border:false,fit:true" style="font-size:8pt; padding:5px; margin:0px;">' +
+                '</div>' +
 	        '</div>';
 
     }
 
     m_ContainerObj.append(m_WindowsHtml);
     $.parser.parse(m_ContainerObj);
-    
+    var m_MaxTitleLength = 0;    //找出长度最大的横坐标tick
+    var m_MaxRowNameLength = 0;  //找出Item名字最长的长度
+    if (myData.columns != null && myData.columns != undefined) {
+        for (var i = 0; i < myData.columns.length; i++) {
+            if (myData.columns[i].title.length > m_MaxTitleLength) {
+                m_MaxTitleLength = myData.columns[i].title.length;
+            }
+        }
+        for (var i = 0; i < myData.rows.length; i++) {
+            if (myData.rows[i].RowName.length > m_MaxRowNameLength) {
+                m_MaxRowNameLength = myData.rows[i].RowName.length;
+            }
+        }
+    }
+    m_MaxTitleLength = m_MaxTitleLength > 4 ? m_MaxTitleLength - 4 : 0;
+
+    $("#" + myContainerId + "_WindowsLayout").layout('panel', 'center').append('<div id = "' + myContainerId + '_Chart" style = "width:' + ($('#' + myContainerId + '_WindowsLayout').layout('panel', 'center').panel('options').width - 35 - 11 * m_MaxRowNameLength) + 'px; height:' + ($('#' + myContainerId + '_WindowsLayout').layout('panel', 'center').panel('options').height - m_MaxTitleLength - m_GridHeight - 10) + 'px; font-size:8pt; "></div>');
+
     if (myIsShowGrid == true) {
         //GetChart(m_WindowId + "_Grid", m_WindowId + "_Chart", MsgData, "Line", "asdfasdfafd");
         //GetChart(m_WindowId + "_Grid", m_WindowId + "_Chart", MsgData, "Bar", null);

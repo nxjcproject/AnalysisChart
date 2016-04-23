@@ -122,7 +122,6 @@
                             <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="SaveDataTagClick();">保存</a>
                         </td>
                         <td>
-                            <a href="#" class="easyui-linkbutton" data-options="iconCls:'ext-icon-page_white_excel',plain:true" onclick="ExportFileFun111();">导出11111</a>
                             <a href="#" class="easyui-linkbutton" data-options="iconCls:'ext-icon-page_white_excel',plain:true" onclick="ExportFileFun();">导出</a>
                         </td>
                     </tr>

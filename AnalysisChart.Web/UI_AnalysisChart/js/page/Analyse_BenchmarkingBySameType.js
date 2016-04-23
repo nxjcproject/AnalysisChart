@@ -328,7 +328,7 @@ function InitializeStandardGrid(myGridId, myData) {
         }]],
         onDblClickRow: function (rowIndex, rowData) {
             var m_NewRow = {
-                'TagItemId': rowData.StandardItemId, 'Name': rowData.StandardName,
+                'TagItemId': rowData.StandardItemId, 'Name': rowData.Name + ">>" + rowData.StandardName,
                 'OrganizationId': "", 'LevelCode': "", 'StatisticType': rowData.StandardId,
                 'StatisticName' : rowData.StandardName, 'VariableId': "", 'Value': rowData.StandardValue
             };
@@ -380,10 +380,102 @@ function SetSelectedObjValue(myMsgData) {
         }
     }
 }
+function GetDataGridToTableTransposition(myTitleName, mySelectDatetime) {
+    var m_DataGridDataObj = $('#grid_SelectedObj').datagrid("getRows");
+    var m_NewDataGridDataObj = [];
+    for (var i = 0; i < m_DataGridDataObj.length; i++) {      //构造数组仅名称和值两列
+        m_NewDataGridDataObj.push([m_DataGridDataObj[i]["Name"], m_DataGridDataObj[i]["Value"]]);
+    }
+
+    var m_MaxSplitCount = 0;         //取分割后最大的数组长度
+    var m_TitleArray = [];
+    var m_TableColumnArray = [];
+    m_NewDataGridDataObj = m_NewDataGridDataObj.sort(function (a, b) {              //对名字进行升序排序
+        if (a[0] > b[0]) {
+            return 1;
+        } else if (a[0] < b[0]) {
+            return -1;
+        } else {
+            return 0;
+        }
+    });
+    for (var i = 0; i < m_NewDataGridDataObj.length; i++) {
+        var m_TitleItemArray = m_NewDataGridDataObj[i][0].split(">>");
+        if (m_MaxSplitCount < m_TitleItemArray.length) {
+            m_MaxSplitCount = m_TitleItemArray.length;        //取分割后最大的数组长度
+        }
+        m_TitleArray.push(m_TitleItemArray);
+    }
+
+    for (var i = 0; i < m_MaxSplitCount; i++) {
+        var m_TitleString = "";
+        var m_Colspan = 1;
+        for (var j = 0; j < m_TitleArray.length; j++) {
+            if (i < m_TitleArray[j].length) {                          //检查数组不能越界
+                if (m_TitleString != m_TitleArray[j][i]) {
+                    m_TitleString = m_TitleArray[j][i];
+                    if (m_TableColumnArray[i] == undefined) {
+                        m_TableColumnArray[i] = [];
+                    }
+                    m_TableColumnArray[i].push([m_TitleString, 1]);
+
+                    if (m_TableColumnArray[i].length > 1) {
+                        m_TableColumnArray[i][m_TableColumnArray[i].length - 2][1] = m_Colspan;
+                    }
+                    m_Colspan = 1;
+                }
+                else {
+                    m_Colspan = m_Colspan + 1;
+                }
+            }
+            else {
+                if (m_TableColumnArray[i] == undefined) {
+                    m_TableColumnArray[i] = [];
+                }
+                m_TableColumnArray[i].push(["", 1]);
+            }
+        }
+        if (m_TableColumnArray[i].length > 0) {
+            m_TableColumnArray[i][m_TableColumnArray[i].length - 1][1] = m_Colspan;
+        }
+    }
+    ////////////////生成table/////////////
+    var m_TableString = '<table style = "border:0px;margin:0px;border-collapse:collapse;border-spacing:0px;padding:0px;">';
+    m_TitleSpan = m_NewDataGridDataObj.length > 0 ? m_NewDataGridDataObj.length : 1;
+    var m_TitleHtml = '<tr><td colspan = ' + m_TitleSpan + ' style = "font-size:18pt; text-align:center; font-weight:bold;">' + myTitleName + '</td></tr>';
+    m_TitleHtml = m_TitleHtml + '<tr><td colspan = ' + m_TitleSpan + ' style = "text-align:center; "> 统计日期: ' + mySelectDatetime + '</td></tr>';
+
+    m_TableString = m_TableString + m_TitleHtml;
+    for (var i = 0; i < m_TableColumnArray.length; i++) {
+        m_TableString = m_TableString + "<tr>"
+        for (var j = 0; j < m_TableColumnArray[i].length; j++) {
+            if (m_TableColumnArray[i][j][1] > 1) {
+                m_TableString = m_TableString + '<td colspan = ' + m_TableColumnArray[i][j][1] + ' style = "border:0.1pt solid black; text-align:center;">' + m_TableColumnArray[i][j][0] + '</td>';
+            }
+            else {
+                m_TableString = m_TableString + '<td style = "border:0.1pt solid black; text-align:center;">' + m_TableColumnArray[i][j][0] + '</td>';
+            }
+        }
+        m_TableString = m_TableString + "</tr>";
+    }
+    m_TableString = m_TableString + "<tr>"
+    for (var i = 0; i < m_NewDataGridDataObj.length; i++) {
+        m_TableString = m_TableString + '<td style = "border:0.1pt solid black; text-align:center;">' + m_NewDataGridDataObj[i][1] + '</td>';
+    }
+    m_TableString = m_TableString + "</tr></table>";
+
+    return m_TableString;
+    //for (var i = 0; i < m_DataGridDataObj.length - 1; i++) {
+    //    for (var j = i + 1; j < m_DataGridDataObj.length; j++) {
+    //        if(m_DataGridDataObj[i]["Name"] > 
+    //    }
+    //}
+}
+
 
 function ExportFileFun() {
     var m_FunctionName = "ExcelStream";
-    var m_Parameter1 = GetDataGridTableHtml("grid_SelectedObj", "横向对标数据", SelectDatetime);
+    var m_Parameter1 = GetDataGridToTableTransposition("横向对标数据", SelectDatetime);                 //GetDataGridTableHtmlSplitColumn("grid_SelectedObj", "横向对标数据", SelectDatetime, ">>", "Name");
     var m_Parameter2 = "横向对标数据";
 
     var m_ReplaceAlllt = new RegExp("<", "g");

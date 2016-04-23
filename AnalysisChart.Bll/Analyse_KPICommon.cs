@@ -48,9 +48,9 @@ namespace AnalysisChart.Bll
             }
             return m_OrganizationIdList;
         }
-        public static string GetStandardItems(string myStatisticalMethod, string myValueType, List<string> myOrganizations)
+        public static string GetStandardItems(string myStatisticalMethod, string myValueType, string myStandardType, List<string> myOrganizations)
         {
-            DataTable m_StandardItems = dal_IAnalyse_KPICommon.GetStandardItems(myStatisticalMethod, myValueType, myOrganizations);
+            DataTable m_StandardItems = dal_IAnalyse_KPICommon.GetStandardItems(myStatisticalMethod, myValueType, myStandardType, myOrganizations);
             return EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_StandardItems);
         }
         public static string GetComprehensiveStandardItems(string myStatisticalMethod, string myValueType)

@@ -1598,6 +1598,10 @@
     <Content Include="lib\pllib\themes\jquery.jqplot.min.css" />
     <Content Include="UI_HistoryTrend\HistoryTrend_DCS.aspx" />
     <Content Include="UI_HistoryTrend\js\page\HistoryTrend_DCS.js" />
+    <Content Include="UI_ProductionChart\Analyse_ProductionHorizontalComparison.aspx" />
+    <Content Include="UI_ProductionChart\Analyse_ProductionLongitudinalComparison.aspx" />
+    <Content Include="UI_ProductionChart\js\page\Analyse_ProductionHorizontalComparison.js" />
+    <Content Include="UI_ProductionChart\js\page\Analyse_ProductionLongitudinalComparison.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1639,6 +1643,20 @@
     <Compile Include="UI_HistoryTrend\HistoryTrend_DCS.aspx.designer.cs">
       <DependentUpon>HistoryTrend_DCS.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI_ProductionChart\Analyse_ProductionHorizontalComparison.aspx.cs">
+      <DependentUpon>Analyse_ProductionHorizontalComparison.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI_ProductionChart\Analyse_ProductionHorizontalComparison.aspx.designer.cs">
+      <DependentUpon>Analyse_ProductionHorizontalComparison.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI_ProductionChart\Analyse_ProductionLongitudinalComparison.aspx.cs">
+      <DependentUpon>Analyse_ProductionLongitudinalComparison.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI_ProductionChart\Analyse_ProductionLongitudinalComparison.aspx.designer.cs">
+      <DependentUpon>Analyse_ProductionLongitudinalComparison.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="lib\pllib\syntaxhighlighter\LGPL-LICENSE" />
@@ -1674,6 +1692,9 @@
     <Folder Include="UI_HistoryTrend\css\" />
     <Folder Include="UI_HistoryTrend\images\" />
     <Folder Include="UI_HistoryTrend\js\common\" />
+    <Folder Include="UI_ProductionChart\css\" />
+    <Folder Include="UI_ProductionChart\images\" />
+    <Folder Include="UI_ProductionChart\js\common\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

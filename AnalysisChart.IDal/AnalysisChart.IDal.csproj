@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IAnalyse_ProductionHorizontalComparison.cs" />
     <Compile Include="IAnalyse_BenchmarkingBySameType.cs" />
     <Compile Include="IAnalyse_ComprehensiveBenchmarking.cs" />
     <Compile Include="IAnalyse_KPICommon.cs" />

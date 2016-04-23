@@ -23,3 +23,5 @@ C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Bll\b
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Bll\bin\Release\EnergyConsumption.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Bll\bin\Release\UpDownLoadFiles.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Bll\bin\Release\UpDownLoadFiles.pdb
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Bll\bin\Release\RunIndicators.dll
+C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Bll\bin\Release\RunIndicators.pdb

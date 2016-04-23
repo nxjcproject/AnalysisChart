@@ -52,6 +52,7 @@
     <Compile Include="Analyse_BenchmarkingBySameType.cs" />
     <Compile Include="Analyse_ComprehensiveBenchmarking.cs" />
     <Compile Include="Analyse_KPICommon.cs" />
+    <Compile Include="Analyse_ProductionHorizontalComparison.cs" />
     <Compile Include="AnalysisKPI_EntityBenchmarking.cs" />
     <Compile Include="EnergyPredit.cs" />
     <Compile Include="HistoryTrend.cs" />

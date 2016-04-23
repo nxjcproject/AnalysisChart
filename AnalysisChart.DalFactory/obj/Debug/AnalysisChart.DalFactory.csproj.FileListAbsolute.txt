@@ -8,11 +8,3 @@ C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.DalFa
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.DalFactory\obj\Debug\AnalysisChart.DalFactory.csprojResolveAssemblyReference.cache
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.DalFactory\obj\Debug\AnalysisChart.DalFactory.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.DalFactory\obj\Debug\AnalysisChart.DalFactory.pdb
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\bin\Debug\AnalysisChart.DalFactory.dll
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\bin\Debug\AnalysisChart.DalFactory.pdb
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\bin\Debug\AnalysisChart.IDal.dll
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\bin\Debug\AnalysisChart.IDal.pdb
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\bin\Debug\DataFactory.pdb
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\obj\Debug\AnalysisChart.DalFactory.csprojResolveAssemblyReference.cache
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\obj\Debug\AnalysisChart.DalFactory.dll
-E:\NXJC\项目文件\AnalysisChart\AnalysisChart.DalFactory\obj\Debug\AnalysisChart.DalFactory.pdb

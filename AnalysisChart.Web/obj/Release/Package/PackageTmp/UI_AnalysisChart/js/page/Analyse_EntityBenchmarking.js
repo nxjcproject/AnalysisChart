@@ -278,7 +278,7 @@ function InitializeStandardGrid(myGridId, myData) {
             //var m_SelectedTabId = GetTabIdByTitle(m_SelectedTabTitle);
             var m_SameTimeOfLastCyc = $("input[id='Checkbox_LastYearSameTime']:checked").val(); //是否同期
             var m_NewRow = {
-                'TagItemId': rowData.StandardItemId, 'TagItemName': rowData.Name,
+                'TagItemId': rowData.StandardItemId, 'TagItemName': rowData.StandardName + ">>" + rowData.Name,
                 'TagId': rowData.StandardItemId, 'TagStaticsType': "1",
                 'TagTable': "", 'TagDataBase': "", 'TagDescription': rowData.StandardName,
                 'TagTabClass': "ComparableStandard", 'SameTimeOfLastCyc': m_SameTimeOfLastCyc, 'OtherInfo': rowData.StandardValue
@@ -551,10 +551,10 @@ function RemoveDataTagGroupById(myId) {
         }
     });
 }
-
 function ExportFileFun() {
+    
     var m_FunctionName = "ExcelStream";
-    var m_Parameter1 = GetDataGridTableHtml("Windows0_Grid", "工序对标数据", SelectDatetime);
+    var m_Parameter1 = GetDataGridTableHtmlSplitColumn("Windows0_Grid", "工序对标数据", SelectDatetime, ">>", "RowName");   //$('#Windows0_Grid').datagrid('getPanel').html(); 
     var m_Parameter2 = "工序对标数据";
 
     var m_ReplaceAlllt = new RegExp("<", "g");
