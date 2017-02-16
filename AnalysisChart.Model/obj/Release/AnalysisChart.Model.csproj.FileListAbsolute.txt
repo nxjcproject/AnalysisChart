@@ -2,3 +2,7 @@ C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Model
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Model\bin\Release\AnalysisChart.Model.pdb
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Model\obj\Release\AnalysisChart.Model.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.Model\obj\Release\AnalysisChart.Model.pdb
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.Model\bin\Release\AnalysisChart.Model.dll
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.Model\bin\Release\AnalysisChart.Model.pdb
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.Model\obj\Release\AnalysisChart.Model.dll
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.Model\obj\Release\AnalysisChart.Model.pdb

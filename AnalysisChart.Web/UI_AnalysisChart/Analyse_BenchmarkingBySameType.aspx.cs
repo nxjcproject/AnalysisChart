@@ -38,9 +38,9 @@ namespace AnalysisChart.Web.UI_AnalysisChart
             }
         }
         [WebMethod]
-        public static string GetBenchmarkingDataValue(string myStartTime, string myEndTime, string myTagInfoJson)
+        public static string GetBenchmarkingDataValue(string myStartTime, string myEndTime, string myValueType, string myTagInfoJson)
         {
-            string myValueJson = AnalysisChart.Bll.Analyse_BenchmarkingBySameType.GetBenchmarkingDataValue(myStartTime, myEndTime, myTagInfoJson);
+            string myValueJson = AnalysisChart.Bll.Analyse_BenchmarkingBySameType.GetBenchmarkingDataValue(myStartTime, myEndTime, myValueType, myTagInfoJson);
             return myValueJson;
         }
         [WebMethod]
@@ -52,19 +52,32 @@ namespace AnalysisChart.Web.UI_AnalysisChart
             return m_IndexTagJson;
         }
         [WebMethod]
-        public static string GetStaticsItems(string myOrganizationType, string myModel)
+        public static string GetStaticsItems(string myOrganizationType, string myModel, string myEquipmentCommonId, string mySpecifications, string myHiddenMainMachine, string myKeyName)
         {
             List<string> m_DataValidIdGroup = GetDataValidIdGroup("ProductionOrganization");
             List<string> m_Organizations = WebUserControls.Service.OrganizationSelector.OrganisationTree.GetOrganisationLevelCodeById(m_DataValidIdGroup);
             if (m_DataValidIdGroup != null && m_DataValidIdGroup.Count > 0)
             {
-                string StaticsItemsJson = AnalysisChart.Bll.Analyse_BenchmarkingBySameType.GetStaticsItems(myOrganizationType, myModel, m_Organizations);
+                bool m_HiddenMainMachine = myHiddenMainMachine == "Hidden" ? true : false;
+                string StaticsItemsJson = AnalysisChart.Bll.Analyse_BenchmarkingBySameType.GetStaticsItems(myOrganizationType, myModel, myEquipmentCommonId, mySpecifications, m_HiddenMainMachine, myKeyName, m_Organizations);
                 return StaticsItemsJson;
             }
             else
             {
                 return "{\"rows\":[],\"total\":0}";
             }
+        }
+        [WebMethod]
+        public static string GetEquipmentCommonInfo(string myOrganizationLineType)
+        {
+            string m_EquipmentItemsJson = AnalysisChart.Bll.Analyse_KPICommon.GetEquipmentCommonInfo(myOrganizationLineType);
+            return m_EquipmentItemsJson;
+        }
+        [WebMethod]
+        public static string GetSpecificationsInfo(string myEquipmentCommonId)
+        {
+            string m_EquipmentItemsJson = AnalysisChart.Bll.Analyse_KPICommon.GetSpecificationsInfo(myEquipmentCommonId);
+            return m_EquipmentItemsJson;
         }
     }
 }

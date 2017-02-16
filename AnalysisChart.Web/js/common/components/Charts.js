@@ -1,4 +1,5 @@
-﻿function CreatChart(myChartObjId, myData, myChartType, myTitle) {
+﻿
+function CreatChart(myChartObjId, myData, myChartType, myTitle) {
     var m_ChartObj;
     if (myChartType == 'Line') {
         m_ChartObj = GetLineChart(myChartObjId, myData, myTitle);
@@ -57,7 +58,7 @@ function GetLineChart(myChartObjId, myData, myTitle, temp) {
         }
         m_Lines.push(m_LineTemp);
     }
-    //////////////////////////////找到最大的bar累加和////////////////////////////
+    //////////////////////////////找到最大的line累加和////////////////////////////
     for (var i = 0; i < m_Rows.length; i++) {
         for (var j = 1; j < myData['columns'].length; j++) {
             var m_CurrentValue = parseFloat(m_Rows[i][myData['columns'][j].field]);
@@ -70,7 +71,7 @@ function GetLineChart(myChartObjId, myData, myTitle, temp) {
 
     var ChartJqplot = $.jqplot(myChartObjId, m_Lines, {
         animate: true,
-        seriesColors: ["#01b3f9", "#fef102", "#f8000e", "#a400ed", "#aaf900", "#fe0072", "#0c6c92", "#fea002", "#c1020a", "#62008d", "#3c8300"],
+        seriesColors: ["#62fcf1", "#ff7471", "#fdf39d", "#8def77", "#4da5fe", "#7f82ec", "#eb3e68", "#f8a659", "#249090", "#fe9af6", "#e1e1e3", "#a6a6a7"],
         // Will animate plot on calls to plot1.replot({resetAxes:true})
         animateReplot: true,
         seriesDefaults: {
@@ -78,49 +79,59 @@ function GetLineChart(myChartObjId, myData, myTitle, temp) {
             markerOptions: { size: 0 }
         },
         axesDefaults: {
-            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-            renderer: jQuery.jqplot.LinearAxisRenderer //设置横(纵)轴上数据加载的渲染器
+            tickRenderer: $.jqplot.CanvasAxisTickRenderer
         },
         series: m_Labels,
         title: {
             text: myTitle,
-            fontFamily: '"Comic Sans MS", cursive',
+            fontFamily: '"Times New Roman", cursive',
             fontSize: '11pt',
-            textColor: '#C7AA4E'
+            textColor: '#000000'
         },
         legend: {
+            renderer: $.jqplot.EnhancedLegendRenderer,
             show: true,
-            location: 'e',
-            placement: 'outside',
-            legendOptions: {
-                fontSize: '8pt',
-                fontFamily: '宋体'
+            location: 's',
+            placement: 'outsideGrid',
+            disableIEFading: true,
+            seriesToggle: 'normal',
+            seriesToggleReplot: true,
+            rendererOptions: {
+                numberColumns: 4
             }
         },
         axes: {
             xaxis: {
-                //renderer: $.jqplot.CategoryAxisRenderer,
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                 tickOptions: {
-                    angle: 10
+                    //angle: 10
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor:'#000000'
                 },
-                //ticks: [['1', '一月份'], ['2', '二月份'], ['3', '三月份'], ['4', '四月份'], ['5', '五月份'], ['6', '六月份'], ['7', '七月份']],
                 ticks: m_AxisX,
                 label: myData['Units']['UnitX'],
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
                 },
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer
             },
             yaxis: {
-                renderer: $.jqplot.LogAxisRenderer,
-
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                tickOptions: {
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
+                },
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
                 },
                 tickInterval: m_MaxBarValue / 10,
                 min: 0,
@@ -133,22 +144,46 @@ function GetLineChart(myChartObjId, myData, myTitle, temp) {
             show: true,
             zoom: true
         },
+        highlighter: {
+            show: true,
+            showMarker: true,
+            sizeAdjust: 16,  // 当鼠标移动到数据点上时，数据点扩大的增量
+            tooltipAxes: 'y',
+            fadeTooltip: true,// 设置提示信息栏出现和消失的方式（是否淡入淡出）  
+            lineWidthAdjust: 2.5,   //当鼠标移动到放大的数据点上时，设置增大的数据点的宽度
+            //tooltipOffset: 20,       // 提示信息栏据被高亮显示的数据点的偏移位置，以像素计
+            tooltipLocation: 'n'
+        },
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#fffdf6', // 设置整个图表区域的背景色
-            borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
-            borderWidth: 2.0, //设置图表的（最外侧）边框宽度
+            background: '#ffffff', // 设置整个图表区域的背景色
+            borderColor: '#666666', // 设置图表的(最外侧)边框的颜色
+            borderWidth: 1.0, //设置图表的（最外侧）边框宽度
             shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
             shadowAngle: 45, // 设置阴影区域的角度，从x轴顺时针方向旋转
             shadowOffset: 1.5, // 设置阴影区域偏移出图片边框的距离
             shadowWidth: 3, // 设置阴影区域的宽度
             shadowDepth: 3, // 设置影音区域重叠阴影的数量
             shadowAlpha: 0.07, // 设置阴影区域的透明度
-            renderer: $.jqplot.CanvasGridRenderer, // renderer to use to draw the grid.
             rendererOptions: {} // options to pass to the renderer. Note, the default
             // CanvasGridRenderer takes no additional options.
+        },
+        canvasOverlay: {
+            show: true
         }
+    });
+    $('#' + myChartObjId).parent().bind('_resize', function (event, ui) {
+        ChartJqplot.replot({ resetAxes: true });
+    });
+    var labels = $('table.jqplot-table-legend');
+    labels.each(function (index) {
+        $(this).css('border', '0px');
+    });
+    var LegendLabellabels = $('td.jqplot-table-legend-label');
+    LegendLabellabels.each(function (index) {
+        $(this).css('padding-right', '5px');
+        $(this).css('text-align', 'left');
     });
     return ChartJqplot;
 }
@@ -310,7 +345,7 @@ function GetDateXLineChart(myChartObjId, myData, myTitle) {
     var ChartJqplot = $.jqplot(myChartObjId, m_Lines, {
         animate: true,
         // Will animate plot on calls to plot1.replot({resetAxes:true})
-        seriesColors: ["#01b3f9", "#fef102", "#f8000e", "#a400ed", "#aaf900", "#fe0072", "#0c6c92", "#fea002", "#c1020a", "#62008d", "#3c8300"],
+        seriesColors: ["#62fcf1", "#ff7471", "#fdf39d", "#8def77", "#4da5fe", "#7f82ec", "#eb3e68", "#f8a659", "#249090", "#fe9af6", "#e1e1e3", "#a6a6a7"],
         animateReplot: true,
         seriesDefaults: {
             lineWidth: 1,
@@ -322,16 +357,21 @@ function GetDateXLineChart(myChartObjId, myData, myTitle) {
         series: m_Labels,
         title: {
             text: myTitle,
-            fontFamily: '"Comic Sans MS", cursive',
+            fontFamily: '"Times New Roman", cursive',
             fontSize: '11pt',
-            textColor: '#C7AA4E'
+            textColor: '#000000'
         },
         legend: {
+            renderer: $.jqplot.EnhancedLegendRenderer,
             show: true,
-            fontSize: '8pt',
-            show: true,
-            location: 'e',
-            placement: 'outside'
+            location: 's',
+            placement: 'outsideGrid',
+            disableIEFading: true,
+            seriesToggle: 'normal',
+            seriesToggleReplot: true,
+            rendererOptions: {
+                numberColumns: 4
+            }
         },
         axes: {
             xaxis: {
@@ -339,24 +379,33 @@ function GetDateXLineChart(myChartObjId, myData, myTitle) {
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                 tickOptions: {
                     formatString: formatString,
-                    angle: 10,
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
                 },
                 label: myData['Units']['UnitX'],
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
                 },
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer
             },
             yaxis: {
-                renderer: $.jqplot.LogAxisRenderer,
-
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                tickOptions: {
+                    formatString: "%.2f",
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
+                },
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
                 },
                 tickInterval: m_MaxBarValue / 10,
                 min: 0,
@@ -369,21 +418,32 @@ function GetDateXLineChart(myChartObjId, myData, myTitle) {
             show: true,
             zoom: true
         },
+        highlighter: {
+            show: true,
+            showMarker: true,
+            sizeAdjust: 16,  // 当鼠标移动到数据点上时，数据点扩大的增量
+            tooltipAxes: 'y',
+            fadeTooltip: true,// 设置提示信息栏出现和消失的方式（是否淡入淡出）  
+            lineWidthAdjust: 2.5,   //当鼠标移动到放大的数据点上时，设置增大的数据点的宽度
+            //tooltipOffset: 20,       // 提示信息栏据被高亮显示的数据点的偏移位置，以像素计
+            tooltipLocation: 'n'
+        },
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#fffdf6', // 设置整个图表区域的背景色
-            borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
-            borderWidth: 2.0, //设置图表的（最外侧）边框宽度
+            background: '#ffffff', // 设置整个图表区域的背景色
+            borderColor: '#666666', // 设置图表的(最外侧)边框的颜色
+            borderWidth: 1.0, //设置图表的（最外侧）边框宽度
             shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
             shadowAngle: 45, // 设置阴影区域的角度，从x轴顺时针方向旋转
             shadowOffset: 1.5, // 设置阴影区域偏移出图片边框的距离
             shadowWidth: 3, // 设置阴影区域的宽度
             shadowDepth: 3, // 设置影音区域重叠阴影的数量
             shadowAlpha: 0.07, // 设置阴影区域的透明度
-            renderer: $.jqplot.CanvasGridRenderer, // renderer to use to draw the grid.
             rendererOptions: {} // options to pass to the renderer. Note, the default
-            // CanvasGridRenderer takes no additional options.
+        },
+        canvasOverlay: {
+            show: true
         }
     });
 
@@ -391,7 +451,15 @@ function GetDateXLineChart(myChartObjId, myData, myTitle) {
         ChartJqplot.replot({ resetAxes: true });
     });
 
-
+    var labels = $('table.jqplot-table-legend');
+    labels.each(function (index) {
+        $(this).css('border', '0px');
+    });
+    var LegendLabellabels = $('td.jqplot-table-legend-label');
+    LegendLabellabels.each(function (index) {
+        $(this).css('padding-right', '10px');
+        $(this).css('text-align', 'left');
+    });
     return ChartJqplot;
 }
 
@@ -446,17 +514,64 @@ function GetBarChart(myChartObjId, myData, myTitle) {
     }
 
     m_MaxBarValue = GetYaxisMax(m_MaxBarValue);
-    var m_BarMargin = 3;   //计算每组之间的间距
-    if (m_Bars.length > 4) {
-        m_BarMargin = 2;
+    var m_BarMargin = 5;   //计算每组之间的间距
+    //if (m_Bars.length > 4) {
+    //    m_BarMargin = 2;
+    //}
+    //else {
+    //    m_BarMargin = 7 - m_Bars.length;
+    //}
+    ////////////////柱状图是否转角////////////////
+    var m_ChartWidth = $('#' + myChartObjId).width();
+    var m_SingleBarWidth = (m_ChartWidth - (myData['columns'].length - 1) * 10) / (myData['rows'].length * (myData['columns'].length - 1));
+    var m_BarZoneWidth = 0;
+    var m_AngleX = 0;
+    if (m_SingleBarWidth < 15) {
+        m_BarZoneWidth = myData['rows'].length * 15 + 10;
     }
     else {
-        m_BarMargin = 7 - m_Bars.length;
+        m_BarZoneWidth = myData['rows'].length * m_SingleBarWidth + 10;
     }
+    var m_MaxWordLength = 0;
+    for (var i = 0; i < m_AxisX.length; i++) {
+        if (m_AxisX[i].length > m_MaxWordLength) {
+            m_MaxWordLength = m_AxisX[i].length;
+        }
+    }
+    if (m_BarZoneWidth <= 11) {
+        m_AngleX = -90;
+    }
+    else if (m_BarZoneWidth >= m_MaxWordLength * 11) {
+        m_AngleX = 0;
+    }
+    else {
+        var m_Radian = Math.asin(m_BarZoneWidth / (m_MaxWordLength * 11));
+        m_AngleX = 180 * m_Radian / Math.PI - 90;
+        var m_ModifyParmeter = Math.pow((m_AngleX + 45), 2);
+        var m_ModifyRadio = 45 - Math.sqrt(m_ModifyParmeter);
+        m_AngleX = m_AngleX - m_AngleX * m_ModifyRadio / 45;
+        if (m_AngleX > -12) {
+            m_AngleX = -12;
+        }
+        else if (m_AngleX < -85) {
+            m_AngleX = -90;
+        }
+    }
+    
+    //if (m_AngleX <= -45) {
+        
+    //}
+    //else if (m_AngleX < -20) {
+    //    m_AngleX = m_AngleX + (40 + m_AngleX) * 0.6;
+    //}
+    //else if (m_AngleX < -10) {
+    //    m_AngleX = m_AngleX + 5;
+    //}
+    ////////////
     var BarJqplot = $.jqplot(myChartObjId, m_Bars, {
         animate: !$.jqplot.use_excanvas,
         //seriesColors: ["#4bb2c5", "#c5b47f", "#EAA228", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"],
-        seriesColors: ["#01b3f9", "#fef102", "#f8000e", "#a400ed", "#aaf900", "#fe0072", "#0c6c92", "#fea002", "#c1020a", "#62008d", "#3c8300"],
+        seriesColors: ["#62fcf1", "#ff7471", "#fdf39d", "#8def77", "#4da5fe", "#7f82ec", "#eb3e68", "#f8a659", "#249090", "#fe9af6", "#e1e1e3", "#a6a6a7"],
         seriesDefaults: {
             renderer: $.jqplot.BarRenderer,
             //pointLabels: { show: true, location: 'e', edgeTolerance: -15 },
@@ -471,49 +586,57 @@ function GetBarChart(myChartObjId, myData, myTitle) {
                 shadowAlpha: 0.3, //同grid相同属性设置
             }
         },
+        series: m_Labels,
         title: {
             text: myTitle,
-            fontFamily: '"Comic Sans MS", cursive',
-            fontSize: '8pt',
-            textColor: '#C7AA4E'
+            fontFamily: '"Times New Roman", cursive',
+            fontSize: '11pt',
+            textColor: '#000000'
         },
-        series: m_Labels,
         legend: {
+            renderer: $.jqplot.EnhancedLegendRenderer,
             show: true,
-            location: 'e',
-            placement: 'outside',
-            fontSize: '8pt'
+            location: 's',
+            placement: 'outsideGrid',
+            disableIEFading: true,
+            seriesToggle: 'normal',
+            seriesToggleReplot: true,
+            rendererOptions: {
+                numberColumns: 4
+            }
         },
         axes: {
             xaxis: {
                 renderer: $.jqplot.CategoryAxisRenderer,
                 ticks: m_AxisX,
-                mark :'outside',
+                mark: 'outside',
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                 tickOptions: {
-                    angle: 10,
-                    fontSize: '8pt',
-                    labelPosition: 'left'
+                    angle: m_AngleX,
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
                 },
                 label: myData['Units']['UnitX'],
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
                 },
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer
             },
-            //yaxis: {
-            //    renderer: $.jqplot.CategoryAxisRenderer
-            // }
             yaxis: {
                 //renderer: $.jqplot.CategoryAxisRenderer,
 
-                //tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                //labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                //labelOptions: {
-                //    fontFamily: 'Helvetica',
-                //    fontSize: '8pt'
-                //},
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                tickOptions: {
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
+                },
                 tickInterval: m_MaxBarValue / 10,
                 min: 0,
                 max: m_MaxBarValue,
@@ -522,43 +645,40 @@ function GetBarChart(myChartObjId, myData, myTitle) {
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
                 }
             }
         },
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#fffdf6', // 设置整个图表区域的背景色
-        borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
-        borderWidth: 2.0, //设置图表的（最外侧）边框宽度
-        shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
-        shadowAngle: 45, // 设置阴影区域的角度，从x轴顺时针方向旋转
-        shadowOffset: 1.5, // 设置阴影区域偏移出图片边框的距离
-        shadowWidth: 3, // 设置阴影区域的宽度
-        shadowDepth: 3, // 设置影音区域重叠阴影的数量
-        shadowAlpha: 0.07, // 设置阴影区域的透明度
-        renderer: $.jqplot.CanvasGridRenderer, // renderer to use to draw the grid.
-        rendererOptions: {} // options to pass to the renderer. Note, the default
-// CanvasGridRenderer takes no additional options.
-},
-        highlighter: {
-            show: true,
-            sizeAdjust: 5,  // 当鼠标移动到数据点上时，数据点扩大的增量
-            fadeTooltip: true,// 设置提示信息栏出现和消失的方式（是否淡入淡出）  
-            //lineWidthAdjust: 2.5,   //当鼠标移动到放大的数据点上时，设置增大的数据点的宽度
-            tooltipOffset: 2,       // 提示信息栏据被高亮显示的数据点的偏移位置，以像素计
-            //tooltipLocation: 'nw' // 提示信息显示位置（英文方向的首写字母）: n, ne, e, se, s, sw, w, nw.  
+            background: '#ffffff', // 设置整个图表区域的背景色
+            borderColor: '#666666', // 设置图表的(最外侧)边框的颜色
+            borderWidth: 1.0, //设置图表的（最外侧）边框宽度
+            shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
+            shadowAngle: 45, // 设置阴影区域的角度，从x轴顺时针方向旋转
+            shadowOffset: 1.5, // 设置阴影区域偏移出图片边框的距离
+            shadowWidth: 3, // 设置阴影区域的宽度
+            shadowDepth: 3, // 设置影音区域重叠阴影的数量
+            shadowAlpha: 0.07, // 设置阴影区域的透明度
+            rendererOptions: {} // options to pass to the renderer. Note, the default
+            // CanvasGridRenderer takes no additional options.
         },
         cursor: {
-            show: false,
-            showTooltip: true,    // 是否显示提示信息栏  
-            followMouse: true,     //光标的提示信息栏是否随光标（鼠标）一起移动  
-            //tooltipLocation: 'se', // 光标提示信息栏的位置设置。如果followMouse=true,那么该位置为  
-            //提示信息栏相对于光标的位置。否则，为光标提示信息栏在图标中的位置  
-            // 该属性可选值： n, ne, e, se, etc. 
-            tooltipOffset: 6,     //提示信息栏距鼠标(followMouse=true)或坐标轴（followMouse=false）的位置  
+            show: true,
+            zoom: true
+        },
+        highlighter: {
+            show: true,
+            showMarker: true,
+            tooltipAxes: 'y',
+            fadeTooltip: true,// 设置提示信息栏出现和消失的方式（是否淡入淡出）  
+            tooltipLocation: 'n'
+        },
+        canvasOverlay: {
+            show: true
         }
     });
     /*
@@ -583,6 +703,22 @@ function GetBarChart(myChartObjId, myData, myTitle) {
         }
     });
     */
+    var labels = $('table.jqplot-table-legend');
+    labels.each(function (index) {
+        //turn the label's text color to the swatch's color  
+        $(this).css('border', '0px');
+        //set type name as the label's text  
+
+    });
+    var LegendLabellabels = $('td.jqplot-table-legend-label');
+    LegendLabellabels.each(function (index) {
+        //turn the label's text color to the swatch's color  
+        //$(this).css('font-size', '10pt');
+        $(this).css('padding-right', '10px');
+        $(this).css('text-align', 'left');
+        //set type name as the label's text  
+
+    });
     return BarJqplot;
 }
 function GetMultiBarChart(myChartObjId, myData, myTitle) {
@@ -640,18 +776,53 @@ function GetMultiBarChart(myChartObjId, myData, myTitle) {
 
     //var bb = JSON.stringify(m_Bars)
 
-    var m_BarMargin = 3;   //计算每组之间的间距
-    if (m_Bars.length > 4) {
-        m_BarMargin = 2;
+    var m_BarMargin = 10;   //计算每组之间的间距0
+    //if (m_Bars.length > 4) {
+    //    m_BarMargin = 2;
+    //}
+    //else {
+    //    m_BarMargin = 7 - m_Bars.length;
+    //}
+    ////////////////柱状图是否转角////////////////
+    var m_ChartWidth = $('#' + myChartObjId).width();
+    var m_SingleBarWidth = (m_ChartWidth - (myData['columns'].length - 1) * 10) / (myData['columns'].length - 1);
+    var m_BarZoneWidth = 0;
+    var m_AngleX = 0;
+    if (m_SingleBarWidth < 15) {
+        m_BarZoneWidth = myData['rows'].length * 15 + 10;
     }
     else {
-        m_BarMargin = 7 - m_Bars.length;
+        m_BarZoneWidth = myData['rows'].length * m_SingleBarWidth + 10;
     }
-
+    var m_MaxWordLength = 0;
+    for (var i = 0; i < m_AxisX.length; i++) {
+        if (m_AxisX[i].length > m_MaxWordLength) {
+            m_MaxWordLength = m_AxisX[i].length;
+        }
+    }
+    if (m_BarZoneWidth <= 11) {
+        m_AngleX = -90;
+    }
+    else if (m_BarZoneWidth >= m_MaxWordLength * 11) {
+        m_AngleX = 0;
+    }
+    else {
+        var m_Radian = Math.asin(m_BarZoneWidth / (m_MaxWordLength * 11));
+        m_AngleX = 180 * m_Radian / Math.PI - 90;
+        var m_ModifyParmeter = Math.pow((m_AngleX + 45), 2);
+        var m_ModifyRadio = 45 - Math.sqrt(m_ModifyParmeter);
+        m_AngleX = m_AngleX - m_AngleX * m_ModifyRadio / 45;
+        if (m_AngleX > -12) {
+            m_AngleX = -12;
+        }
+        else if (m_AngleX < -85) {
+            m_AngleX = -90;
+        }
+    }
     var MultiBarJqplot = $.jqplot(myChartObjId, m_Bars, {
         // Tell the plot to stack the bars.
         stackSeries: true,
-        seriesColors: ["#01b3f9", "#fef102", "#f8000e", "#a400ed", "#aaf900", "#fe0072", "#0c6c92", "#fea002", "#c1020a", "#62008d", "#3c8300"],
+        seriesColors: ["#62fcf1", "#ff7471", "#fdf39d", "#8def77", "#4da5fe", "#7f82ec", "#eb3e68", "#f8a659", "#249090", "#fe9af6", "#e1e1e3", "#a6a6a7"],
         captureRightClick: true,
         seriesDefaults: {
             renderer: $.jqplot.BarRenderer,
@@ -668,7 +839,7 @@ function GetMultiBarChart(myChartObjId, myData, myTitle) {
             shadowDepth: 1, //同grid相同属性设置
             shadowAlpha: 0.3, //同grid相同属性设置
             },
-            pointLabels: { show: true }
+            //pointLabels: { show: true }
         },
         axes: {
             xaxis: {
@@ -676,24 +847,36 @@ function GetMultiBarChart(myChartObjId, myData, myTitle) {
                 ticks: m_AxisX,
                 tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                 tickOptions: {
-                    angle: 10
+                    angle: m_AngleX,
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
                 },
                 label: myData['Units']['UnitX'],
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
                 },
                 labelRenderer: $.jqplot.CanvasAxisLabelRenderer
             },
             yaxis: {
                 //renderer: $.jqplot.CategoryAxisRenderer,
 
-                //tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-                //labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
-                //labelOptions: {
-                //    fontFamily: 'Helvetica',
-                //    fontSize: '8pt'
-                //},
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                tickOptions: {
+                    fontFamily: 'Times New Roman',
+                    fontSize: '9pt',
+                    fontWeight: 'normal',
+                    textColor: '#000000'
+                },
+                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                labelOptions: {
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt',
+                    textColor: '#000000'
+                },
                 tickInterval: m_MaxBarValue / 10,
                 min: 0,
                 max: m_MaxBarValue,
@@ -707,46 +890,58 @@ function GetMultiBarChart(myChartObjId, myData, myTitle) {
                 //tickRenderer: $.jqplot.CanvasAxisTickRenderer,
                 //labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                 labelOptions: {
-                    fontFamily: 'Helvetica',
-                    fontSize: '8pt'
+                    fontFamily: 'Times New Roman',
+                    fontSize: '10pt'
                 }
             }
         },
         series: m_Labels,
         title: {
             text: myTitle,
-            fontFamily: '"Comic Sans MS", cursive',
+            fontFamily: '"Times New Roman", cursive',
             fontSize: '11pt',
-            textColor: '#C7AA4E'
+            textColor: '#000000'
         },
         legend: {
+            renderer: $.jqplot.EnhancedLegendRenderer,
             show: true,
-            location: 'e',
-            placement: 'outside',
-            legendOptions: {
-                fontSize: '8pt',
-                fontFamily: '宋体'
+            location: 's',
+            placement: 'outsideGrid',
+            disableIEFading: true,
+            seriesToggle: 'normal',
+            seriesToggleReplot: true,
+            rendererOptions: {
+                numberColumns: 4
             }
         },
-        cursor: {
+        highlighter: {
             show: true,
-            zoom: true
+            showMarker: true,
+            tooltipAxes: 'y',
+            fadeTooltip: true,// 设置提示信息栏出现和消失的方式（是否淡入淡出）  
+            tooltipLocation: 'n'
         },
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#fffdf6', // 设置整个图表区域的背景色
-            borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
-            borderWidth: 2.0, //设置图表的（最外侧）边框宽度
+            background: '#ffffff', // 设置整个图表区域的背景色
+            borderColor: '#666666', // 设置图表的(最外侧)边框的颜色
+            borderWidth: 1.0, //设置图表的（最外侧）边框宽度
             shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
             shadowAngle: 45, // 设置阴影区域的角度，从x轴顺时针方向旋转
             shadowOffset: 1.5, // 设置阴影区域偏移出图片边框的距离
             shadowWidth: 3, // 设置阴影区域的宽度
             shadowDepth: 3, // 设置影音区域重叠阴影的数量
             shadowAlpha: 0.07, // 设置阴影区域的透明度
-            renderer: $.jqplot.CanvasGridRenderer, // renderer to use to draw the grid.
             rendererOptions: {} // options to pass to the renderer. Note, the default
             // CanvasGridRenderer takes no additional options.
+        },
+        cursor: {
+            show: true,
+            zoom: true
+        },
+        canvasOverlay: {
+            show: true
         }
     });
     // Bind a listener to the "jqplotDataClick" event.  Here, simply change
@@ -757,7 +952,15 @@ function GetMultiBarChart(myChartObjId, myData, myTitle) {
     //      $('#info3').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
     //  }
     //); 
-
+    var labels = $('table.jqplot-table-legend');
+    labels.each(function (index) {
+        $(this).css('border', '0px');
+    });
+    var LegendLabellabels = $('td.jqplot-table-legend-label');
+    LegendLabellabels.each(function (index) {
+        $(this).css('padding-right', '10px');
+        $(this).css('text-align', 'left');
+    });
     return MultiBarJqplot;
 }
 function GetPieChart(myChartObjId, myData, myTitle) {
@@ -779,7 +982,7 @@ function GetPieChart(myChartObjId, myData, myTitle) {
     {
         animate: !$.jqplot.use_excanvas,
         // Will animate plot on calls to plot1.replot({resetAxes:true})
-        seriesColors: ["#01b3f9", "#fef102", "#f8000e", "#a400ed", "#aaf900", "#fe0072", "#0c6c92", "#fea002", "#c1020a", "#62008d", "#3c8300"],
+        seriesColors: ["#62fcf1", "#ff7471", "#fdf39d", "#8def77", "#4da5fe", "#7f82ec", "#eb3e68", "#f8a659", "#249090", "#fe9af6", "#e1e1e3", "#a6a6a7"],
         animateReplot: true,
         seriesDefaults: {
             shadow: true,
@@ -802,105 +1005,130 @@ function GetPieChart(myChartObjId, myData, myTitle) {
 
         title: {
             text: myTitle,
-            fontFamily: '"Comic Sans MS", cursive',
+            fontFamily: '"Times New Roman", cursive',
             fontSize: '11pt',
-            textColor: '#C7AA4E'
+            textColor: '#000000'
         },
-        legend: { show: true, location: 'e', placement: 'outside', fontSize: '8pt', textColor: '#aaa' },
+        legend: {
+            renderer: $.jqplot.EnhancedLegendRenderer,
+            show: true,
+            location: 'e',
+            placement: 'inside',
+            disableIEFading: true,
+            seriesToggle: 'normal',
+            seriesToggleReplot: true,
+            rowSpacing: '1px',
+            rendererOptions: {
+                numberColumns: 1
+            }
+        },
+        highlighter: {
+            show: false,
+            showMarker: false
+        },
+        //legend: { show: true, location: 'e', placement: 'inside', fontSize: '10pt', textColor: '#000000' },
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#fffdf6', // 设置整个图表区域的背景色
-            borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
-            borderWidth: 2.0, //设置图表的（最外侧）边框宽度
+            background: '#ffffff', // 设置整个图表区域的背景色
+            borderColor: '#666666', // 设置图表的(最外侧)边框的颜色
+            borderWidth: 1.0, //设置图表的（最外侧）边框宽度
             shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
             shadowAngle: 45, // 设置阴影区域的角度，从x轴顺时针方向旋转
             shadowOffset: 1.5, // 设置阴影区域偏移出图片边框的距离
             shadowWidth: 3, // 设置阴影区域的宽度
             shadowDepth: 3, // 设置影音区域重叠阴影的数量
             shadowAlpha: 0.07, // 设置阴影区域的透明度
-            renderer: $.jqplot.CanvasGridRenderer, // renderer to use to draw the grid.
             rendererOptions: {} // options to pass to the renderer. Note, the default
             // CanvasGridRenderer takes no additional options.
         }
     });
-    $('.jqplot-target').css('color', '#444');
+    $('.jqplot-target').css('font-size', '10pt');
 
+    var labels = $('table.jqplot-table-legend');
+    labels.each(function (index) {
+        //turn the label's text color to the swatch's color  
+        $(this).css('border', '0px');
+        $(this).css('font-size', '9pt');
+        $(this).css('text-align', 'left');
+        //set type name as the label's text  
+        
+    });
+   
     return PieJqplot;
 }
 
 // 获取仪表盘
 function GetMeterGauge(myChartObjId, myData, myTitle) {
-
-    var m_Rows = myData['rows'];    // 数据行
-    var m_ActualValue = 0;
-    var m_AlarmValue = 0;
-    var m_MinimunVlaue = 0;
-    var m_MaximunValue = 0;
-
     // 数据验证
-    if (myData['rows'].length == 0)  // 无数据行
+    if (myData["value"] == undefined)  // 无数据行
         return null;
 
-    // 遍历数据表
-    // 数据表为一个n行2列的表，列名为RowName是数据的类型，列名为Value是数据的值
-    // 其中数据类型包括：实际值，报警值，表盘下限值（可选，为空时下限值为0）， 表盘上限值（可选，为空时，程序自动以报警值为表盘的70%的方式计算表盘上限）
-    for (var i = 0; i < m_Rows.length; i++) {
-        var m_ValueType = m_Rows[i]['RowName'];
-        var m_Value = parseFloat(m_Rows[i]['value']);
+    var m_MeterGaugeOptions = [];
+    var m_GridOptions = [];
+    m_ActualValue = myData["value"];
 
-        switch (m_ValueType) {
-            case '表盘实际值':     // 当前的实际值
-                m_ActualValue = m_Value;
-                break;
-            case '报警设定值':      // 设定的报警值
-                m_AlarmValue = m_Value;
-                break;
-            case '表盘下限值':    // 表盘的下限值
-                m_MinimunVlaue = m_Value;
-                break;
-            case '表盘上限值':    // 表盘的上限值
-                m_MaximunValue = m_Value;
-                break;
-            default:                // 其他值忽略
-                break;
-        }
-    }
+    m_MeterGaugeOptions["min"] = myData['min'] != undefined ? myData['min'] : 0;
+    m_MeterGaugeOptions["max"] = myData['max'] != undefined ? myData['max'] : m_ActualValue * 1.3;
+    m_MeterGaugeOptions["intervalOuterRadius"] = myData['intervalOuterRadius'] != undefined ? myData['intervalOuterRadius'] : null;
+    m_MeterGaugeOptions["label"] = myData['label'] != undefined ? myData['label'] : "";
+    m_MeterGaugeOptions["ringColor"] = myData['ringColor'] != undefined ? myData['ringColor'] : "#777777";
+    m_MeterGaugeOptions["intervals"] = myData['intervals'] != undefined ? myData['intervals'] : [m_MeterGaugeOptions["max"]];
+    m_MeterGaugeOptions["intervalColors"] = myData['intervalColors'] != undefined ? myData['intervalColors'] : ["#ffffff"];
+    m_MeterGaugeOptions["background"] = myData['background'] != undefined ? myData['background'] : ["#ffffff"];
+    m_MeterGaugeOptions["hubRadius"] = myData['hubRadius'] != undefined ? myData['hubRadius'] : 10;
+    m_MeterGaugeOptions["tickColor"] = myData['tickColor'] != undefined ? myData['tickColor'] : "#000000";
+    m_MeterGaugeOptions["ringWidth"] = myData['ringWidth'] != undefined ? myData['ringWidth'] : 10;
 
-    // 计算表盘的最大值
-    if (m_MaximunValue == 0 && m_AlarmValue > 0) {  // 仅当表盘上限值为0，且设定报警值大于0时，才计算表盘的上限值
-        m_MaximunValue = m_ActualValue / 0.7;
+    if (myData["grid"] != undefined) {
+        m_GridOptions["drawGridLines"] = myData["grid"]['drawGridLines'] != undefined ? myData["grid"]['drawGridLines'] : true;
+        m_GridOptions["shadow"] = myData["grid"]['shadow'] != undefined ? myData["grid"]['shadow'] : true;
+        m_GridOptions["gridLineColor"] = myData["grid"]['gridLineColor'] != undefined ? myData["grid"]['gridLineColor'] : '#cccccc';
+        m_GridOptions["background"] = myData["grid"]['background'] != undefined ? myData["grid"]['background'] : '#ffffff';
+        m_GridOptions["borderColor"] = myData["grid"]['borderColor'] != undefined ? myData["grid"]['borderColor'] : '#555555';
     }
 
     // 获取仪表盘
     var MeterGaugeJqplot = $.jqplot(myChartObjId, [[m_ActualValue]], {
-        title: myTitle,
-        seriesColors: ["#01b3f9", "#fef102", "#f8000e", "#a400ed", "#aaf900", "#fe0072", "#0c6c92", "#fea002", "#c1020a", "#62008d", "#3c8300"],
+        title: {
+            text: myTitle,
+            fontFamily: '"Times New Roman", cursive',
+            fontSize: '11pt',
+            textColor: '#000000'
+        },
+        animateReplot: true,
+        seriesColors: ["#62fcf1", "#f75a57", "#fdf39d", "#8def77", "#4da5fe", "#7f82ec", "#f35a7f", "#f8a659", "#249090", "#fe9af6", "#e1e1e3", "#a6a6a7"],
         seriesDefaults: {
             renderer: $.jqplot.MeterGaugeRenderer,
             rendererOptions: {
-                min: m_MinimunVlaue,                            // 表盘的下限值
-                max: m_MaximunValue,                            // 表盘的上限值
-                ringColor: '#4B4B4B',                           // 表盘的颜色（包括指针）
-                intervals: [m_AlarmValue, m_MaximunValue],      // 表盘的区间（现仅有正常区间和报警区间）
-                intervalColors: ['#99FF66', '#FF0033'],         // 表盘的区间颜色（正常区间为绿色，报警区间为红色）
-                label: myData['Units']['UnitX'],                // 表盘的单位（仅从UnitX中取）
-                hubRadius: 10                                   // 表盘指针下方圆点的大小
+                min: m_MeterGaugeOptions["min"],                            // 表盘的下限值
+                max: m_MeterGaugeOptions["max"],                            // 表盘的上限值
+                intervalOuterRadius: m_MeterGaugeOptions["intervalOuterRadius"],
+                background: m_MeterGaugeOptions["background"],
+                ringColor: m_MeterGaugeOptions["ringColor"],                           // 表盘的颜色（包括指针）
+                intervals: m_MeterGaugeOptions["intervals"],      // 表盘的区间（现仅有正常区间和报警区间）
+                intervalColors: m_MeterGaugeOptions["intervalColors"],         // 表盘的区间颜色（正常区间为绿色，报警区间为红色）
+                labelPosition: 'bottom',
+                labelHeightAdjust: -4,
+                label: m_MeterGaugeOptions["label"],                // 表盘的单位（仅从UnitX中取）
+                labelColor: "#000000",
+                hubRadius: m_MeterGaugeOptions["hubRadius"],                                   // 表盘指针下方圆点的大小
+                tickColor: m_MeterGaugeOptions["tickColor"],                                    //仪表盘数值颜色
+                ringWidth: m_MeterGaugeOptions["ringWidth"]                                     //外边框宽度
             }
         },
         grid: {
             drawGridLines: true, // wether to draw lines across the grid or not.
-            gridLineColor: '#cccccc', // 设置整个图标区域网格背景线的颜色
-            background: '#fffdf6', // 设置整个图表区域的背景色
-            borderColor: '#999999', // 设置图表的(最外侧)边框的颜色
-            borderWidth: 2.0, //设置图表的（最外侧）边框宽度
-            shadow: false, // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
+            gridLineColor: m_GridOptions["gridLineColor"], // 设置整个图标区域网格背景线的颜色
+            background: m_GridOptions["background"], // 设置整个图表区域的背景色
+            borderColor: m_GridOptions["borderColor"], // 设置图表的(最外侧)边框的颜色
+            borderWidth: 1.0, //设置图表的（最外侧）边框宽度
+            shadow: m_GridOptions["shadow"], // 为整个图标（最外侧）边框设置阴影，以突出其立体效果
             shadowAngle: 45, // 设置阴影区域的角度，从x轴顺时针方向旋转
             shadowOffset: 1.5, // 设置阴影区域偏移出图片边框的距离
             shadowWidth: 3, // 设置阴影区域的宽度
             shadowDepth: 3, // 设置影音区域重叠阴影的数量
             shadowAlpha: 0.07, // 设置阴影区域的透明度
-            renderer: $.jqplot.CanvasGridRenderer, // renderer to use to draw the grid.
             rendererOptions: {} // options to pass to the renderer. Note, the default
             // CanvasGridRenderer takes no additional options.
         }
@@ -920,26 +1148,96 @@ function ReleasePlotChart(containerId, plot) {
         plot = null;
     }
 }
+//function GetYaxisMax(myMaxValue) {
+//    var m_MaxValue = Math.abs(myMaxValue);
+//    if (m_MaxValue >= 1) {
+//        var m_MaxDigits = 1;
+//        while ((m_MaxValue / 10) > 1 && m_MaxDigits < 10000000000000000000000000000) {
+//            m_MaxValue = m_MaxValue / 10;
+//            m_MaxDigits = m_MaxDigits * 10;
+//        }
+//        return Math.ceil((myMaxValue / m_MaxDigits)) * m_MaxDigits;
+//    }
+//    else if (m_MaxValue > 0 && m_MaxValue < 1) {
+//        var m_MaxDigits = 1;
+//        while ((m_MaxValue * 10) < 1 && m_MaxDigits < 10000000000000000000000000000) {
+//            m_MaxValue = m_MaxValue * 10;
+//            m_MaxDigits = m_MaxDigits * 10;
+//        }
+//        return Math.ceil((myMaxValue * m_MaxDigits)) / m_MaxDigits;
+//    }
+//    else {
+//        return 1;
+//    }
+
+//}
+function RefreshChartY(myChartObjId) {
+    alert(myChartObjId)
+}
 function GetYaxisMax(myMaxValue) {
     var m_MaxValue = Math.abs(myMaxValue);
+    var m_MaxValueResult = 1;
+    var m_LoopFlag = true;
     if (m_MaxValue >= 1) {
-        var m_MaxDigits = 1;
-        while ((m_MaxValue / 10) > 1 && m_MaxDigits < 10000000000000000000000000000) {
+        while (m_LoopFlag) {
+            if (m_MaxValue >= 10) {             //当大于10的情况下
+                m_MaxValueResult = m_MaxValueResult * 10;
+            }
+            else {                             //当大于1小于10的情况下
+                m_MaxValueResult = m_MaxValueResult * Math.ceil(m_MaxValue * 12) / 10;
+                m_LoopFlag = false;
+            }
             m_MaxValue = m_MaxValue / 10;
-            m_MaxDigits = m_MaxDigits * 10;
         }
-        return Math.ceil((myMaxValue / m_MaxDigits)) * m_MaxDigits;
     }
     else if (m_MaxValue > 0 && m_MaxValue < 1) {
-        var m_MaxDigits = 1;
-        while ((m_MaxValue * 10) < 1 && m_MaxDigits < 10000000000000000000000000000) {
+        while (m_LoopFlag) {
+            if (m_MaxValue < 1) {             //当大于10的情况下
+                m_MaxValueResult = m_MaxValueResult * 0.1;
+            }
+            else {                             //当大于1小于10的情况下
+                m_MaxValueResult = m_MaxValueResult * Math.ceil(m_MaxValue * 12) / 10;
+                m_LoopFlag = false;
+            }
             m_MaxValue = m_MaxValue * 10;
-            m_MaxDigits = m_MaxDigits * 10;
         }
-        return Math.ceil((myMaxValue * m_MaxDigits)) / m_MaxDigits;
     }
     else {
-        return 1;
+        m_MaxValueResult = 0;
     }
-
+    return m_MaxValueResult;
 }
+function GetYaxisMin(myMinValue) {
+    var m_MinValue = Math.abs(myMinValue);
+    var m_MinValueResult = 1;
+    var m_LoopFlag = true;
+    if (m_MinValue >= 1) {
+        while (m_LoopFlag) {
+            if (m_MinValue >= 10) {             //当大于10的情况下
+                m_MinValueResult = m_MinValueResult * 10;
+            }
+            else {                             //当大于1小于10的情况下
+                m_MinValueResult = m_MinValueResult * Math.floor(m_MinValue * 0.8) / 10;
+                m_LoopFlag = false;
+            }
+            m_MinValue = m_MinValue / 10;
+        }
+    }
+    else if (m_MinValue > 0 && m_MinValue < 1) {
+        while (m_LoopFlag) {
+            if (m_MinValue < 1) {             //当大于10的情况下
+                m_MinValueResult = m_MinValueResult * 0.1;
+            }
+            else {                             //当大于1小于10的情况下
+                m_MinValueResult = m_MinValueResult * Math.floor(m_MinValue * 0.8) / 10;
+                m_LoopFlag = false;
+            }
+            m_MinValue = m_MinValue * 10;
+        }
+    }
+    else {
+        m_MinValueResult = 0;
+    }
+    return m_MinValueResult;
+}
+

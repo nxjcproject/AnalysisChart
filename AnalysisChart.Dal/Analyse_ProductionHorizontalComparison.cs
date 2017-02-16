@@ -50,7 +50,7 @@ namespace AnalysisChart.Dal
             }
         }
 
-        public DataTable GetStaticsItems(string myValueType, string myEquipmentCommonId, List<string> myOrganizations)
+        public DataTable GetStaticsItems(string myValueType, string myEquipmentCommonId, string mySpecificationsId, List<string> myOrganizations)
         {
             string m_Condition = "";
             string m_EquipmentCommonCondition = "";
@@ -99,6 +99,10 @@ namespace AnalysisChart.Dal
                     if (myEquipmentCommonId != "")
                     {
                         m_EquipmentCommonCondition = string.Format(" and B.EquipmentCommonId = '{0}' ", myEquipmentCommonId);
+                    }
+                    if (mySpecificationsId != "")
+                    {
+                        m_EquipmentCommonCondition = m_EquipmentCommonCondition + string.Format(" and B.Specifications = '{0}' ", mySpecificationsId);
                     }
                     m_Sql = string.Format(m_Sql, m_Condition, m_EquipmentCommonCondition);
                     DataSet mDataSet_EquipmentInfo = m_DbDataAdapter.MySqlDbDataAdaper.Fill(null, m_Sql, "EquipmentInfoTable");

@@ -2,6 +2,7 @@
 var LastScreenShowType = "";
 var StandardItemsLoadType = 'first';
 var ComparableIndexDataLoadType = 'first';
+var EquipmentCommonComboboxLoadType = 'first';   //是否是第一次加载设备名称（总称）
 //////////////////设置标准库,当选择不同的统计项，则对应不同的标准///////////////
 var CurrentStandardLib;
 var SelectDatetime;   //点击查询后的数据
@@ -25,16 +26,16 @@ function InitializeDateTime() {
     lastMonthDate.setMonth(lastMonthDate.getMonth() - 1);
 
     $('#StartTimeF').datetimespinner({
-        formatter:formatter2,
-        parser:parser2,
-        selections:[[0,4],[5,7],[8,9]], 
-        required:true
+        formatter: formatter2,
+        parser: parser2,
+        selections: [[0, 4], [5, 7], [8, 9]],
+        required: true
     });
     $('#EndTimeF').datetimespinner({
-        formatter:formatter2,
-        parser:parser2,
-        selections:[[0,4],[5,7],[8,9]], 
-        required:true
+        formatter: formatter2,
+        parser: parser2,
+        selections: [[0, 4], [5, 7], [8, 9]],
+        required: true
     });
     var m_LastMonthDateString = lastMonthDate.getFullYear();
     if (lastMonthDate.getMonth() + 1 < 10) {
@@ -52,19 +53,19 @@ function InitializeDateTime() {
     $('#StartTimeF').datetimespinner('setValue', m_LastMonthDateString);
     $('#EndTimeF').datetimespinner('setValue', m_LastMonthDateString);
 }
-function formatter2(date){
-    if (!date){return '';}
+function formatter2(date) {
+    if (!date) { return ''; }
     var y = date.getFullYear();
     var m = date.getMonth() + 1;
-    return y + '-' + (m<10?('0'+m):m);
+    return y + '-' + (m < 10 ? ('0' + m) : m);
 }
-function parser2(s){
-    if (!s){return null;}
+function parser2(s) {
+    if (!s) { return null; }
     var ss = s.split('-');
-    var y = parseInt(ss[0],10);
-    var m = parseInt(ss[1],10);
-    if (!isNaN(y) && !isNaN(m)){
-        return new Date(y,m-1,1);
+    var y = parseInt(ss[0], 10);
+    var m = parseInt(ss[1], 10);
+    if (!isNaN(y) && !isNaN(m)) {
+        return new Date(y, m - 1, 1);
     } else {
         return new Date();
     }
@@ -125,6 +126,111 @@ function InitializeSelectedGrid(myData) {
         toolbar: '#tool_SelectedObj'
     });
 }
+function LoadEquipmentCommonInfo() {
+    var m_OrganizationLineType = $('#Select_ProductionLineTypeF').combobox('getValue');
+    $.ajax({
+        type: "POST",
+        url: "Analyse_EntityBenchmarking.aspx/GetEquipmentCommonInfo",
+        data: "{myOrganizationLineType:'" + m_OrganizationLineType + "'}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+            var m_MsgData = jQuery.parseJSON(msg.d);
+
+            var m_ResultData = [];
+            if (m_MsgData != null && m_MsgData != undefined) {
+                m_ResultData.push({ "id": "", "text": "全部" });
+                for (var i = 0; i < m_MsgData.rows.length; i++) {
+                    m_ResultData.push(m_MsgData.rows[i]);
+                }
+                if (EquipmentCommonComboboxLoadType == 'first') {
+                    $('#EquipmentCommonInfoF').combobox({
+                        data: m_ResultData,
+                        valueField: 'id',
+                        textField: 'text',
+                        //separator: ',',
+                        //multiple: false,
+                        editable: false,
+                        panelHeight: 'auto',
+                        onSelect: function (myRecord) {
+                            //LoadStaticsItemsByEquipment(myRecord.id);
+                            LoadSpecificationsInfoByEquipmentCommonId(myRecord.id, "last");
+                            LoadComparableIndexData('StaticsItems', 'last', 1);
+                        }
+                    });
+                    EquipmentCommonComboboxLoadType = 'last';
+                    LoadSpecificationsInfoByEquipmentCommonId(m_ResultData[0].id, "first");
+                    $('#EquipmentCommonInfoF').combobox("setValue", m_ResultData[0].id);
+                }
+                else {
+                    $('#EquipmentCommonInfoF').combobox("loadData", m_ResultData);
+                    $('#EquipmentCommonInfoF').combobox("setValue", m_ResultData[0].id);
+                    LoadSpecificationsInfoByEquipmentCommonId(m_ResultData[0].id, "first");
+                }
+            }
+        }
+    });
+}
+function LoadSpecificationsInfoByEquipmentCommonId(myEquipmentCommonId, myLoadType) {
+    $.ajax({
+        type: "POST",
+        url: "Analyse_EntityBenchmarking.aspx/GetSpecificationsInfo",
+        data: "{myEquipmentCommonId:'" + myEquipmentCommonId + "'}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+            var m_MsgData = jQuery.parseJSON(msg.d);
+
+            var m_ResultData = [];
+            if (m_MsgData != null && m_MsgData != undefined) {
+                m_ResultData.push({ "id": "", "text": "全部" });
+                for (var i = 0; i < m_MsgData.rows.length; i++) {
+                    m_ResultData.push(m_MsgData.rows[i]);
+                }
+                if (myLoadType == "first") {
+                    $('#SpecificationsInfoF').combobox({
+                        data: m_ResultData,
+                        valueField: 'id',
+                        textField: 'text',
+                        editable: false,
+                        panelHeight: 'auto',
+                        onSelect: function (myRecord) {
+                            LoadComparableIndexData('StaticsItems', 'last', 1);
+                        }
+                    });
+                }
+                else {
+                    $('#SpecificationsInfoF').combobox("loadData", m_ResultData);
+                }
+                //LoadStaticsItemsByEquipment(myEquipmentCommonId, m_ResultData[0].id);
+                $('#SpecificationsInfoF').combobox("setValue", m_ResultData[0].id);
+            }
+        }
+    });
+}
+///////////////////////////////刷新统计项信息列表///////////////////////////////
+function RefreshStaticsItems() {
+    ////////////////当计算综合或者可比综合时，直接调用规格型号
+    var m_ValueType = $('#Combobox_ValueTypeF').combobox('getValue');
+    if (m_ValueType != "ElectricityConsumption_Entity") {
+        var m_OrganizationLineType = $('#Select_ProductionLineTypeF').combobox('getValue');
+        if (m_OrganizationLineType == "熟料") {
+
+            LoadSpecificationsInfoByEquipmentCommonId("RotaryKiln", 'last');
+        }
+        else {
+
+            LoadSpecificationsInfoByEquipmentCommonId("CementGrind", 'last')
+        }
+    }
+    else {
+        LoadEquipmentCommonInfo();
+    }
+    LoadComparableIndexData('StaticsItems', 'last', 1);
+    var m_DataGridId = "grid_StandardItems";
+    $('#' + m_DataGridId).datagrid('loadData', { "rows": [], "total": 0 });
+}
+
 function AddTagItemsFun() {
     //var m_ValueType = $('#Combobox_ValueTypeF').combobox('getValue');
     //var m_SelectedTab = $('#TagItemsTabs').tabs('getSelected');
@@ -140,15 +246,23 @@ function AddTagItemsFun() {
     $('#dlg_TagItemsList').dialog('open');
 }
 function StaticsMethod(myRecord) {
-    if (myRecord.value != null && myRecord.value != undefined) {
-        if (myRecord.value == "ElectricityConsumption_Entity") {
-            $('#Combobox_ObjectTypeF').combobox('disable');
+    $('#textbox_KeyNameF').searchbox('setText', '');
+    RemoveDataTagFun();
+    if (myRecord.value == "ElectricityConsumption_Entity") {
+        $('#EquipmentCommonInfoF').combobox('enable');
+    }
+    else {
+        $('#EquipmentCommonInfoF').combobox('disable');
+        var m_OrganizationLineType = $('#Select_ProductionLineTypeF').combobox('getValue');
+        if (m_OrganizationLineType == "熟料") {
+
+            LoadSpecificationsInfoByEquipmentCommonId("RotaryKiln", 'last');
         }
         else {
-            $('#Combobox_ObjectTypeF').combobox('enable');
+
+            LoadSpecificationsInfoByEquipmentCommonId("CementGrind", 'last')
         }
-    }   
-    RemoveDataTagFun();
+    }
 }
 function RemoveDataTagFun() {
     $('#grid_SelectedObj').datagrid('loadData', { 'rows': [], 'total': 0 });
@@ -156,7 +270,7 @@ function RemoveDataTagFun() {
 function loadTagItemsListDialog() {
     $('#dlg_TagItemsList').dialog({
         title: '数据项查询',
-        width: 700,
+        width: 750,
         height: 450,
         left: 20,
         top: 20,
@@ -169,15 +283,19 @@ function loadTagItemsListDialog() {
 }
 function LoadComparableIndexData() {                                      //装载可比数据
     var m_Model = "";
-    if ($('#Combobox_ObjectTypeF').combobox('options').disabled == true) {
+    var m_ValueTypeF = $('#Combobox_ValueTypeF').combobox("getValue");
+    if (m_ValueTypeF == "ElectricityConsumption_Entity") {
         m_Model = "ClinkerAndCementmill";
     }
-    var m_OrganizationLineType = $('#Combobox_ObjectTypeF').combobox('getValue');
-
+    var m_OrganizationLineType = $('#Select_ProductionLineTypeF').combobox('getValue');
+    var m_EquipmentCommonId = $('#EquipmentCommonInfoF').combobox("getValue");
+    var m_Specifications = $('#SpecificationsInfoF').combobox("getValue");
+    var m_HiddenMainMachine = $("input[id='checkBox_HiddenMainMachine']:checked").val(); //是否隐藏主要设备
+    var m_KeyNameF = $('#textbox_KeyNameF').searchbox('getValue');
     $.ajax({
         type: "POST",
         url: "Analyse_BenchmarkingBySameType.aspx/GetStaticsItems",
-        data: "{myOrganizationType:'" + m_OrganizationLineType + "',myModel:'" + m_Model + "'}",
+        data: "{myOrganizationType:'" + m_OrganizationLineType + "',myModel:'" + m_Model + "',myEquipmentCommonId:'" + m_EquipmentCommonId + "',mySpecifications:'" + m_Specifications + "',myHiddenMainMachine:'" + m_HiddenMainMachine + "',myKeyName:'" + m_KeyNameF + "'}",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
@@ -196,7 +314,7 @@ function LoadComparableIndexData() {                                      //装�
 }
 function LoadStandardItems() {
     var m_ValueTypeCombobox = $('#Combobox_ValueTypeF').combobox('getValue').split('_');
-    
+
     var m_StatisticalMethod = m_ValueTypeCombobox[1];
     var m_ValueType = m_ValueTypeCombobox[0];
     $.ajax({
@@ -230,7 +348,7 @@ function InitializeStaticsItems(myGridId, myData) {
             if (rowData.id.length > 5) {
                 //onOrganisationTreeClick(node);
                 var m_VariableId = rowData.VariableId;
-                var m_ValueTypeName = m_VariableId + $('#Combobox_ValueTypeF').combobox('getText');
+                var m_ValueTypeName = $('#Combobox_ValueTypeF').combobox('getText');
 
                 var m_ValueType = $('#Combobox_ValueTypeF').combobox('getValue');
                 var m_TagItemId = m_VariableId + "_" + m_ValueType;
@@ -327,10 +445,11 @@ function InitializeStandardGrid(myGridId, myData) {
             field: 'Unit'
         }]],
         onDblClickRow: function (rowIndex, rowData) {
+            var m_ValueTypeTemp = $('#Combobox_ValueTypeF').combobox('getText');
             var m_NewRow = {
-                'TagItemId': rowData.StandardItemId, 'Name': rowData.Name + ">>" + rowData.StandardName,
+                'TagItemId': rowData.StandardItemId, 'Name': rowData.StandardName + ">>" + rowData.Name.replace(m_ValueTypeTemp, ''),
                 'OrganizationId': "", 'LevelCode': "", 'StatisticType': rowData.StandardId,
-                'StatisticName' : rowData.StandardName, 'VariableId': "", 'Value': rowData.StandardValue
+                'StatisticName': rowData.StandardName, 'VariableId': "", 'Value': rowData.StandardValue
             };
             var m_AddFlag = AddChartTags(m_NewRow);
             if (m_AddFlag == true) {
@@ -341,6 +460,7 @@ function InitializeStandardGrid(myGridId, myData) {
 }
 //////////////////////////////添加到显示列表///////////////////////////////
 function AddChartTags(myRow) {
+    var m_ValueTypeF = $('#Combobox_ValueTypeF').combobox("getValue");
     var m_Rows = $('#grid_SelectedObj').datagrid('getRows');
     var m_TagsCount = m_Rows.length;
     var m_IsDuplicate = false;
@@ -353,6 +473,10 @@ function AddChartTags(myRow) {
         }
         if (m_IsDuplicate == true) {
             alert("该标签已经选择!");
+            return false;
+        }
+        else if ((myRow["LevelCode"]).length <= 7 && m_ValueTypeF == "ElectricityConsumption_Entity") {          //如果是工序电耗，则不能选择到产线
+            alert("请选择到工序!");
             return false;
         }
         else {
@@ -515,6 +639,7 @@ function ExportFileFun() {
 function LoadChartFun() {
     var m_StartTime = $('#StartTimeF').datetimespinner('getValue');
     var m_EndTime = $('#EndTimeF').datetimespinner('getValue');
+    var m_ValueTypeF = $('#Combobox_ValueTypeF').combobox("getValue");
     var m_TagInfoObject = $('#grid_SelectedObj').datagrid('getData');
     SelectDatetime = "开始时间:" + m_StartTime + "--结束时间" + m_EndTime + "(" + $('#Combobox_ValueTypeF').combobox('getText') + ")";
     if (m_TagInfoObject['rows'].length > 0) {
@@ -522,7 +647,7 @@ function LoadChartFun() {
         $.ajax({
             type: "POST",
             url: "Analyse_BenchmarkingBySameType.aspx/GetBenchmarkingDataValue",
-            data: "{myStartTime:'" + m_StartTime + "',myEndTime:'" + m_EndTime + "',myTagInfoJson:'" + m_TagInfoJson +  "'}",
+            data: "{myStartTime:'" + m_StartTime + "',myEndTime:'" + m_EndTime + "',myValueType:'" + m_ValueTypeF + "',myTagInfoJson:'" + m_TagInfoJson + "'}",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (msg) {
@@ -592,7 +717,11 @@ function LoadChartFun() {
                     alert("请先关闭图表!");
                 }
                 else {
+                    if (m_MsgData["rows"].length > 0) {
+                        m_MsgData["rows"]["RowName"] = $('#Combobox_ValueTypeF').combobox('getText');
+                    }
                     var m_Postion = GetWindowPostion(m_EmptyIndex, m_WindowContainerId);
+                    //for(m_MsgData
                     WindowsDialogOpen(m_MsgData, m_WindowContainerId, false, m_ChartType, m_Postion[0], m_Postion[1], m_Postion[2], m_Postion[3], false, m_Maximizable, m_Maximized);
                     //WindowsDialogOpen(m_MsgData, "Windows_Container", true, "Bar", 100, 100, 0, 0, false, true, false);
                 }
@@ -614,64 +743,63 @@ function LoadChartFun() {
         });
     }
 }
-    ///////////////////////获取window初始位置////////////////////////////
-    function GetWindowPostion(myWindowIndex, myWindowContainerId) {
-        var m_ParentObj = $('#' + myWindowContainerId);
-        var m_ParentWidth = m_ParentObj.width();
-        var m_ParentHeight = m_ParentObj.height();
-        var m_ZeroLeft = 0;
-        var m_ZeroTop = 0;
-        var m_Padding = 5;
-        var m_Width = (m_ParentWidth - m_Padding) / 2;
-        var m_Height = (m_ParentHeight - m_Padding) / 2;
-        var m_Left = 0;
-        var m_Top = 0;
-        if (myWindowIndex == 0) {
-            m_Left = m_ZeroLeft;
-            m_Top = m_ZeroTop;
-        }
-        else if (myWindowIndex == 1) {
-            m_Left = m_ZeroLeft + m_Width + m_Padding;
-            m_Top = m_ZeroTop;
-        }
-        else if (myWindowIndex == 2) {
-            m_Left = m_ZeroLeft;
-            m_Top = m_ZeroTop + m_Height + m_Padding;
-        }
-        else if (myWindowIndex == 3) {
-            m_Left = m_ZeroLeft + m_Width + m_Padding;
-            m_Top = m_ZeroTop + m_Height + m_Padding;
-        }
-
-        return [m_Width, m_Height, m_Left, m_Top]
+///////////////////////获取window初始位置////////////////////////////
+function GetWindowPostion(myWindowIndex, myWindowContainerId) {
+    var m_ParentObj = $('#' + myWindowContainerId);
+    var m_ParentWidth = m_ParentObj.width();
+    var m_ParentHeight = m_ParentObj.height();
+    var m_ZeroLeft = 0;
+    var m_ZeroTop = 0;
+    var m_Padding = 5;
+    var m_Width = (m_ParentWidth - m_Padding) / 2;
+    var m_Height = (m_ParentHeight - m_Padding) / 2;
+    var m_Left = 0;
+    var m_Top = 0;
+    if (myWindowIndex == 0) {
+        m_Left = m_ZeroLeft;
+        m_Top = m_ZeroTop;
     }
-    ///////////////////////////////////////////打开window窗口//////////////////////////////////////////
-    function WindowsDialogOpen(myData, myContainerId, myIsShowGrid, myChartType, myWidth, myHeight, myLeft, myTop, myDraggable, myMaximizable, myMaximized) {
-        ;
-        var m_WindowId = OpenWindows(myContainerId, '数据分析', myWidth, myHeight, myLeft, myTop, myDraggable, myMaximizable, myMaximized); //弹出windows
-        var m_WindowObj = $('#' + m_WindowId);
-        if (myMaximized != true) {
-            CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);               //生成图表
-        }
-
-        m_WindowObj.window({
-            onBeforeClose: function () {
-                ///////////////////////释放图形空间///////////////
-                //var m_ContainerId = GetWindowIdByObj($(this));
-                ReleaseGridChartObj(m_WindowId);
-                CloseWindow($(this))
-            },
-            onMaximize: function () {
-                TopWindow(m_WindowId);
-                ChangeSize(m_WindowId);
-                CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
-
-            },
-            onRestore: function () {
-                //TopWindow(m_WindowId);
-                ChangeSize(m_WindowId);
-                CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
-            }
-        });
+    else if (myWindowIndex == 1) {
+        m_Left = m_ZeroLeft + m_Width + m_Padding;
+        m_Top = m_ZeroTop;
     }
+    else if (myWindowIndex == 2) {
+        m_Left = m_ZeroLeft;
+        m_Top = m_ZeroTop + m_Height + m_Padding;
+    }
+    else if (myWindowIndex == 3) {
+        m_Left = m_ZeroLeft + m_Width + m_Padding;
+        m_Top = m_ZeroTop + m_Height + m_Padding;
+    }
+
+    return [m_Width, m_Height, m_Left, m_Top]
+}
+///////////////////////////////////////////打开window窗口//////////////////////////////////////////
+function WindowsDialogOpen(myData, myContainerId, myIsShowGrid, myChartType, myWidth, myHeight, myLeft, myTop, myDraggable, myMaximizable, myMaximized) {
+    var m_WindowId = OpenWindows(myContainerId, '数据分析', myWidth, myHeight, myLeft, myTop, myDraggable, myMaximizable, myMaximized); //弹出windows
+    var m_WindowObj = $('#' + m_WindowId);
+    CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);               //生成图表
+    if (myMaximized != true) {
+        ChangeSize(m_WindowId);
+    }
+    m_WindowObj.window({
+        onBeforeClose: function () {
+            ///////////////////////释放图形空间///////////////
+            //var m_ContainerId = GetWindowIdByObj($(this));
+            ReleaseGridChartObj(m_WindowId);
+            CloseWindow($(this))
+        },
+        onMaximize: function () {
+            TopWindow(m_WindowId);
+            ChangeSize(m_WindowId);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+
+        },
+        onRestore: function () {
+            //TopWindow(m_WindowId);
+            ChangeSize(m_WindowId);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+        }
+    });
+}
 

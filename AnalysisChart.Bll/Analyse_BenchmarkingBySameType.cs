@@ -16,14 +16,14 @@ namespace AnalysisChart.Bll
 
         private static readonly IAnalyse_BenchmarkingBySameType dal_IAnalysisKPI = DalFactory.DalFactory.GetBenchmarkingBySameType();
         //private readonly static 
-        public static string GetStaticsItems(string myOrganizationType, string myModel, List<string> myOrganizations)
+        public static string GetStaticsItems(string myOrganizationType, string myModel, string myEquipmentCommonId, string mySpecifications, bool myHiddenMainMachine, string myKeyName, List<string> myOrganizations)
         {
             string m_JsonValue = "";
-            DataTable m_Value = dal_IAnalysisKPI.GetStaticsItems(myOrganizationType, myModel, myOrganizations);
+            DataTable m_Value = dal_IAnalysisKPI.GetStaticsItems(myOrganizationType, myModel, myEquipmentCommonId, mySpecifications, myHiddenMainMachine, myKeyName, myOrganizations);
             m_JsonValue = EasyUIJsonParser.TreeJsonParser.DataTableToJsonByLevelCode(m_Value, "LevelCode", "Name",new string[] {"OrganizationId","Name","LevelCode","Value","VariableId","Type"});
             return m_JsonValue;
         }
-        public static string GetBenchmarkingDataValue(string myStartTime, string myEndTime, string myTagInfoJson)
+        public static string GetBenchmarkingDataValue(string myStartTime, string myEndTime, string myValueType, string myTagInfoJson)
         {
             string m_ValueJson = "";
             string[] m_RowsJson = EasyUIJsonParser.Infrastructure.JsonHelper.ArrayPicker("rows", myTagInfoJson);
@@ -35,6 +35,19 @@ namespace AnalysisChart.Bll
                 List<string> m_VariableList = new List<string>(0);
                 foreach (DataRow item in m_TagsInfoTable.Rows)           //工序电耗或者主要设备电耗
                 {
+                    if (myValueType == "ElectricityConsumption_Entity")
+                    {
+                        item["StatisticType"] = "Entity";
+                    }
+                    else if (myValueType == "ElectricityConsumption_Comprehensive" || myValueType == "CoalConsumption_Comprehensive" || myValueType == "EnergyConsumption_Comprehensive")
+                    {
+                        item["StatisticType"] = "Comprehensive";
+                    }
+                    else if (myValueType == "ElectricityConsumption_Comparable" || myValueType == "CoalConsumption_Comparable" || myValueType == "EnergyConsumption_Comparable")
+                    {
+                        item["StatisticType"] = "Comparable";
+                    }
+
                     if (item["OrganizationId"] != null && item["OrganizationId"].ToString() != "")
                     {
                         if (item["StatisticType"].ToString() == "Entity")     //工序电耗或者是设备电耗

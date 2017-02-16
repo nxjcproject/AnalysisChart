@@ -127,21 +127,21 @@ function AddTagItemsFun() {
     var m_SelectedTab = $('#TagItemsTabs').tabs('getSelected');
     var m_SelectedTabTitle = m_SelectedTab.panel('options').title;
     if (FirstLoadIndexTab == 'first') {
-        LoadComparableIndexData(m_ValueType, AllCategroy, 'first');
+        LoadComparableIndexData(m_ValueType, AllCategroy, 'first', 4);
         FirstLoadIndexTab = 'last';
     }
     else {
-        LoadComparableIndexData(m_ValueType, AllCategroy, 'last');
+        LoadComparableIndexData(m_ValueType, AllCategroy, 'last', 4);
     }
     $('#dlg_TagItemsList').dialog('open');
 }
 /////////////////////////////获得卡片中的数据,并填充数据///////////////////////////
-function LoadComparableIndexData(myValueType, myCategory, myLoadType) {                                      //装载可比数据
+function LoadComparableIndexData(myValueType, myCategory, myLoadType, mySuccessFlag) {                                      //装载可比数据
     $.messager.progress({
         title: 'Please waiting',
         msg: 'Loading data...'
     });
-    var m_SuccessFlag = 4;
+    var m_SuccessFlag = mySuccessFlag;
     if (myCategory == 'StaticsItems' || myCategory == AllCategroy) {
         var m_OrganizationLineType = $('#Select_ProductionLineTypeF').combobox('getValue');
         var m_HiddenMainMachine = $("input[id='checkBox_HiddenMainMachine']:checked").val(); //是否隐藏主要设备
@@ -165,6 +165,12 @@ function LoadComparableIndexData(myValueType, myCategory, myLoadType) {         
                 if (m_SuccessFlag == 0) {
                     $.messager.progress('close');
                 }
+            },
+            error: function (msg) {
+                m_SuccessFlag = m_SuccessFlag - 1;
+                if (m_SuccessFlag == 0) {
+                    $.messager.progress('close');
+                }        
             }
         });
     }
@@ -205,6 +211,12 @@ function LoadComparableIndexData(myValueType, myCategory, myLoadType) {         
                 if (m_SuccessFlag == 0) {
                     $.messager.progress('close');
                 }
+            },
+            error: function (msg) {
+                m_SuccessFlag = m_SuccessFlag - 1;
+                if (m_SuccessFlag == 0) {
+                    $.messager.progress('close');
+                }
             }
         });
     }
@@ -232,18 +244,24 @@ function LoadComparableIndexData(myValueType, myCategory, myLoadType) {         
                 else {
                     $('#' + m_DataGridId).datagrid('loadData', m_MsgData);
                 }
+                m_SuccessFlag = m_SuccessFlag - 1;
+                if (m_SuccessFlag == 0) {
+                    $.messager.progress('close');
+                }
+            },
+            error: function (msg) {
+                m_SuccessFlag = m_SuccessFlag - 1;
+                if (m_SuccessFlag == 0) {
+                    $.messager.progress('close');
+                }
             }
         });
-        m_SuccessFlag = m_SuccessFlag - 1;
-        if (m_SuccessFlag == 0) {
-            $.messager.progress('close');
-        }
     }
 }
 ///////////////////////////////刷新统计项信息列表///////////////////////////////
 function RefreshStaticsItems() {
     var m_ValueType = $('#Combobox_ValueTypeF').combobox('getValue');
-    LoadComparableIndexData(m_ValueType, 'StaticsItems', 'last');
+    LoadComparableIndexData(m_ValueType, 'StaticsItems', 'last', 1);
 
     var m_OrganizationType = $('#Select_ProductionLineTypeF').combobox('getValue');        //判断产线类型
     if (m_OrganizationType == "熟料") {
@@ -297,8 +315,9 @@ function InitializeStandardGrid(myGridId, myData) {
             //var m_SelectedTabTitle = m_SelectedTab.panel('options').title;   //获得标签所属的类别Tab的Title
             //var m_SelectedTabId = GetTabIdByTitle(m_SelectedTabTitle);
             var m_SameTimeOfLastCyc = $("input[id='Checkbox_LastYearSameTime']:checked").val(); //是否同期
+            var m_ValueTypeTemp = $('#Combobox_ValueTypeF').combobox('getText');
             var m_NewRow = {
-                'TagItemId': rowData.StandardItemId, 'TagItemName': rowData.StandardName + ">>" + rowData.Name,
+                'TagItemId': rowData.StandardItemId, 'TagItemName': rowData.StandardName + ">>" + rowData.Name.replace(m_ValueTypeTemp, ''),
                 'TagId': rowData.StandardItemId, 'TagStaticsType': "1",
                 'TagTable': "", 'TagDataBase': "", 'TagDescription': rowData.StandardName,
                 'TagTabClass': "ComparableStandard", 'SameTimeOfLastCyc': m_SameTimeOfLastCyc, 'OtherInfo': rowData.StandardValue
@@ -530,7 +549,8 @@ function RemoveAllDataTagGroupFun() {
                 success: function (msg) {
                     if (msg.d == "1") {
                         alert("删除成功!");
-                        LoadComparableIndexData("CustomDefine", "last");
+                        var m_ValueType = $('#Combobox_ValueTypeF').combobox('getValue');
+                        LoadComparableIndexData(m_ValueType, "CustomDefine", "last", 1);
                     }
                     else if (msg.d == "0") {
                         alert("没有可以删除的项!");
@@ -555,7 +575,8 @@ function RemoveDataTagGroupById(myId) {
                 success: function (msg) {
                     if (msg.d == "1") {
                         alert("删除成功!");
-                        LoadComparableIndexData("CustomDefine", "last");
+                        var m_ValueType = $('#Combobox_ValueTypeF').combobox('getValue');
+                        LoadComparableIndexData(m_ValueType, "CustomDefine", "last", 1);
                     }
                     else if (msg.d == "0") {
                         alert("没有可以删除的项!");
@@ -707,6 +728,7 @@ function LoadLinesDataFun() {
                         alert("请先关闭图表!");
                     }
                     else {
+                        m_MsgData["title"] = $('#Combobox_ValueTypeF').combobox('getText');
                         m_Postion = GetWindowPostion(m_EmptyIndex, m_WindowContainerId);
                         WindowsDialogOpen(m_MsgData, m_WindowContainerId, true, m_ChartType, m_Postion[0], m_Postion[1], m_Postion[2], m_Postion[3], false, m_Maximizable, m_Maximized);
                     }
@@ -782,10 +804,10 @@ function WindowsDialogOpen(myData, myContainerId, myIsShowGrid, myChartType, myW
     ;
     var m_WindowId = OpenWindows(myContainerId, '数据分析', myWidth, myHeight, myLeft, myTop, myDraggable, myMaximizable, myMaximized); //弹出windows
     var m_WindowObj = $('#' + m_WindowId);
+    CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);               //生成图表
     if (myMaximized != true) {
-        CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);               //生成图表
+        ChangeSize(m_WindowId);
     }
-
     m_WindowObj.window({
         onBeforeClose: function () {
             ///////////////////////释放图形空间///////////////
@@ -796,13 +818,13 @@ function WindowsDialogOpen(myData, myContainerId, myIsShowGrid, myChartType, myW
         onMaximize: function () {
             TopWindow(m_WindowId);
             ChangeSize(m_WindowId);
-            CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
 
         },
         onRestore: function () {
             //TopWindow(m_WindowId);
             ChangeSize(m_WindowId);
-            CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
         }
     });
 }

@@ -103,6 +103,7 @@
     <Content Include="js\common\components\GridChart.js" />
     <Content Include="js\common\components\WindowsDialog.js" />
     <Content Include="UI_AnalysisChart\Analyse_ComprehensiveBenchmarking.aspx" />
+    <Content Include="UI_AnalysisChart\css\page\Monitor_KeyIndicators.css" />
     <Content Include="UI_AnalysisChart\js\page\Analyse_BenchmarkingBySameType.js" />
     <Content Include="UI_AnalysisChart\js\page\Analyse_ComprehensiveBenchmarking.js" />
     <Content Include="UI_AnalysisChart\js\page\Analyse_EnergyPredit.js" />
@@ -1596,6 +1597,8 @@
     <Content Include="lib\pllib\syntaxhighlighter\styles\shThemejqPlot.min.css" />
     <Content Include="lib\pllib\themes\jquery.jqplot.css" />
     <Content Include="lib\pllib\themes\jquery.jqplot.min.css" />
+    <Content Include="UI_AnalysisChart\js\page\Monitor_KeyIndicators.js" />
+    <Content Include="UI_AnalysisChart\Monitor_KeyIndicators.aspx" />
     <Content Include="UI_HistoryTrend\HistoryTrend_DCS.aspx" />
     <Content Include="UI_HistoryTrend\js\page\HistoryTrend_DCS.js" />
     <Content Include="UI_ProductionChart\Analyse_ProductionHorizontalComparison.aspx" />
@@ -1635,6 +1638,13 @@
     </Compile>
     <Compile Include="UI_AnalysisChart\Analyse_ComprehensiveBenchmarking.aspx.designer.cs">
       <DependentUpon>Analyse_ComprehensiveBenchmarking.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI_AnalysisChart\Monitor_KeyIndicators.aspx.cs">
+      <DependentUpon>Monitor_KeyIndicators.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI_AnalysisChart\Monitor_KeyIndicators.aspx.designer.cs">
+      <DependentUpon>Monitor_KeyIndicators.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI_HistoryTrend\HistoryTrend_DCS.aspx.cs">
       <DependentUpon>HistoryTrend_DCS.aspx</DependentUpon>
@@ -1685,7 +1695,6 @@
     <Folder Include="images\page\" />
     <Folder Include="js\page\" />
     <Folder Include="UI_AnalysisChart\css\common\" />
-    <Folder Include="UI_AnalysisChart\css\page\" />
     <Folder Include="UI_AnalysisChart\images\common\" />
     <Folder Include="UI_AnalysisChart\images\page\" />
     <Folder Include="UI_AnalysisChart\js\common\" />

@@ -15,9 +15,9 @@ namespace AnalysisChart.Bll
         private const string AnalyseCycMonth = "month";
         private const string AnalyseCycCustomDefine = "CustomDefine";
         private static readonly IAnalysisKPI_EntityBenchmarking dal_IEntityBenchmarking = DalFactory.DalFactory.GetEntityBenchmarkingInstance();
-        public static string GetStaticsItems(string myOrganizationType, string myValueType, bool myHiddenMainMachine, List<string> myOrganizations)
+        public static string GetStaticsItems(string myOrganizationType, string myValueType, string myEquipmentCommonId, string mySpecifications, bool myHiddenMainMachine, string myKeyName, List<string> myOrganizations)
         {
-            DataTable m_StaticsItems = dal_IEntityBenchmarking.GetStaticsItems(myOrganizationType, myValueType, myHiddenMainMachine, myOrganizations);
+            DataTable m_StaticsItems = dal_IEntityBenchmarking.GetStaticsItems(myOrganizationType, myValueType, myEquipmentCommonId, mySpecifications, myHiddenMainMachine, myKeyName, myOrganizations);
             return EasyUIJsonParser.TreeJsonParser.DataTableToJsonByLevelCode(m_StaticsItems, "LevelCode", "Name", new string[] { "OrganizationId", "TagColumnName", "TagTableName", "TagDataBase", "Type" });
         }
 

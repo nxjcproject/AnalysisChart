@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="/lib/pllib/themes/jquery.jqplot.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shCoreDefault.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shThemejqPlot.min.css" />
-    <link type="text/css" rel="stylesheet" href="/css/common/charts.css" />
+    <!--    <link type="text/css" rel="stylesheet" href="/css/common/charts.css" />-->
     <link type="text/css" rel="stylesheet" href="/css/common/NormalPage.css" />
 
 
@@ -30,15 +30,24 @@
 
     <!--[if lt IE 9]><script type="text/javascript" src="/lib/pllib/excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="/lib/pllib/jquery.jqplot.min.js"></script>
-    <!--<script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shCore.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushXml.min.js"></script>-->
 
-    <!-- Additional plugins go here -->
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.trendline.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.barRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pieRenderer.min.js"></script>
+
+    <!-- Additional plugins go here -->
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasTextRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.dateAxisRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pointLabels.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasOverlay.min.js"></script> 
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.cursor.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.highlighter.min.js"></script>
+    <!--[if lt IE 8 ]><script type="text/javascript" src="/lib/pllib/plugins/jqplot.json2.min"></script><![endif]-->
+
 
     <!--[if lt IE 8 ]><script type="text/javascript" src="/js/common/json2.min.js"></script><![endif]-->
 
@@ -60,11 +69,11 @@
         <div class="easyui-panel" data-options="region:'west',border:true" style="width: 340px;">
             <div id="MainSelect_Toolbar" style="display: none; text-align: center; padding-top: 10px;">
                 <table style="width: 330px;">
-                    <tr>
+                    <tr style ="display:none;">
                         <td style="width: 65px; height: 30px;">统计周期</td>
-                        <td style="text-align: left;" colspan="2">
+                        <td style="text-align: left; visibility: hidden;" colspan="2">
                             <input type="radio" name="SelectRadio_Cyc" id="Radio_YearStatistics" value="year" checked="checked" />年统计
-                            <input type="radio" name="SelectRadio_Cyc" id="Radio_MonthStatistics" value="month" style="visibility: hidden;" />月统计
+                            <input type="radio" name="SelectRadio_Cyc" id="Radio_MonthStatistics" value="month"/>月统计
                             <input type="radio" name="SelectRadio_Cyc" id="Radio_CustomDefineStatistics" value="CustomDefine" />自定义月统计
                         </td>
                     </tr>
@@ -72,14 +81,14 @@
                         <td style="height: 30px;">起止时间</td>
                         <td style="text-align: left;" colspan="2">
                             <input id="StartTime" class="easyui-datebox" data-options="validType:'md[\'2012-10\']', required:true" style="width: 100px" />
-                            <span id="InnerlLine">---</span>
-                            <input id="EndTime" class="easyui-datebox" data-options="validType:'md[\'2012-10-10\']', required:true" style="width: 100px" />
+                            <!--<span id="InnerlLine">---</span>-->
+                            <input id="EndTime" class="easyui-datebox" data-options="validType:'md[\'2012-10-10\']', required:true" style="width: 100px; visibility:hidden;" />
                         </td>
                     </tr>
                     <tr>
                         <td style="height: 30px;">指标类别</td>
                         <td style="text-align: left;" colspan="2">
-                            <select id="ComboTree_ValueTypeF" class="easyui-combobox" name="ValueType" data-options="panelHeight:'auto'" style="width: 135px;">
+                            <select id="ComboTree_ValueTypeF" class="easyui-combotree" name="ValueType" style="width: 135px;">
                             </select>&nbsp;&nbsp;&nbsp;<input id="Checkbox_LastYearSameTime" type="checkbox" value="同期" />去年同期
                         </td>
                     </tr>
@@ -135,7 +144,7 @@
             </div>
         </div>
     </div>
-    <%--------------------------------------------------dialog选择数据项------------------------------------------%>
+    <!--------------------------------------------------dialog选择数据项------------------------------------------>
     <div id="dlg_TagItemsList" class="easyui-dialog">
         <div id="TagItemsTabs" class="easyui-tabs" data-options="fit:true, tabPosition:'left'">
             <div title="统计数据" style="padding: 10px;">
@@ -145,8 +154,12 @@
                             <table>
                                 <tr>
                                     <td>设备名称：</td>
-                                    <td style="width: 140px">
-                                        <input id="EquipmentCommonInfo" class="easyui-combobox" style="width: 120px" />
+                                    <td style="width: 110px">
+                                        <input id="EquipmentCommonInfo" class="easyui-combobox" style="width: 100px" />
+                                    </td>
+                                    <td>规格型号：</td>
+                                    <td style="width: 160px">
+                                        <input id="SpecificationsInfo" class="easyui-combobox" style="width: 150px" />
                                     </td>
                                 </tr>
                             </table>

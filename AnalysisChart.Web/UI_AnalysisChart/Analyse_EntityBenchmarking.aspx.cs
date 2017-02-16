@@ -40,14 +40,14 @@ namespace AnalysisChart.Web.UI_AnalysisChart
             }
         }
         [WebMethod]
-        public static string GetStaticsItems(string myOrganizationType, string myValueType, string myHiddenMainMachine)
+        public static string GetStaticsItems(string myOrganizationType, string myValueType, string myEquipmentCommonId, string mySpecifications, string myHiddenMainMachine, string myKeyName)
         {
             bool m_HiddenMainMachine = myHiddenMainMachine == "Hidden" ? true : false;
             List<string> m_DataValidIdGroup = GetDataValidIdGroup("ProductionOrganization");
             List<string> m_Organizations = WebUserControls.Service.OrganizationSelector.OrganisationTree.GetOrganisationLevelCodeById(m_DataValidIdGroup);
             if (m_DataValidIdGroup != null && m_DataValidIdGroup.Count > 0)
             {
-                string StaticsItemsJson = AnalysisChart.Bll.AnalysisKPI_EntityBenchmarking.GetStaticsItems(myOrganizationType, myValueType, m_HiddenMainMachine, m_Organizations);
+                string StaticsItemsJson = AnalysisChart.Bll.AnalysisKPI_EntityBenchmarking.GetStaticsItems(myOrganizationType, myValueType, myEquipmentCommonId, mySpecifications, m_HiddenMainMachine, myKeyName, m_Organizations);
                 return StaticsItemsJson;
             }
             else
@@ -63,7 +63,18 @@ namespace AnalysisChart.Web.UI_AnalysisChart
             string m_IndexTagJson = AnalysisChart.Bll.Analyse_KPICommon.GetStandardItems(myStatisticalMethod, myValueType, StandardType, m_OrganizationIdList);
             return m_IndexTagJson;
         }
-
+        [WebMethod]
+        public static string GetEquipmentCommonInfo(string myOrganizationLineType)
+        {
+            string m_EquipmentItemsJson = AnalysisChart.Bll.Analyse_KPICommon.GetEquipmentCommonInfo(myOrganizationLineType);
+            return m_EquipmentItemsJson;
+        }
+        [WebMethod]
+        public static string GetSpecificationsInfo(string myEquipmentCommonId)
+        {
+            string m_EquipmentItemsJson = AnalysisChart.Bll.Analyse_KPICommon.GetSpecificationsInfo(myEquipmentCommonId);
+            return m_EquipmentItemsJson;
+        }
         [WebMethod]
         public static string SaveCustomDefineTags(string myTagsGroupName, string myRemark, string myTagInfoJson)
         {

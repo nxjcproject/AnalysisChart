@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="/lib/pllib/themes/jquery.jqplot.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shCoreDefault.min.css" />
     <link type="text/css" rel="stylesheet" href="/lib/pllib/syntaxhighlighter/styles/shThemejqPlot.min.css" />
-    <link type="text/css" rel="stylesheet" href="/css/common/charts.css" />
+    <!--    <link type="text/css" rel="stylesheet" href="/css/common/charts.css" />-->
     <link type="text/css" rel="stylesheet" href="/css/common/NormalPage.css" />
 
 
@@ -29,15 +29,24 @@
 
     <!--[if lt IE 9]><script type="text/javascript" src="/lib/pllib/excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="/lib/pllib/jquery.jqplot.min.js"></script>
-    <!--<script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shCore.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushJScript.min.js"></script>
-    <script type="text/javascript" src="/lib/pllib/syntaxhighlighter/scripts/shBrushXml.min.js"></script>-->
 
-    <!-- Additional plugins go here -->
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.trendline.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.barRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pieRenderer.min.js"></script>
+
+    <!-- Additional plugins go here -->
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasTextRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.dateAxisRenderer.min.js"></script>
     <script type="text/javascript" src="/lib/pllib/plugins/jqplot.pointLabels.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.enhancedLegendRenderer.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.canvasOverlay.min.js"></script> 
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.cursor.min.js"></script>
+    <script type="text/javascript" src="/lib/pllib/plugins/jqplot.highlighter.min.js"></script>
+    <!--[if lt IE 8 ]><script type="text/javascript" src="/lib/pllib/plugins/jqplot.json2.min"></script><![endif]-->
+
 
     <!--[if lt IE 8 ]><script type="text/javascript" src="/js/common/json2.min.js"></script><![endif]-->
 
@@ -135,7 +144,7 @@
             </div>
         </div>
     </div>
-    <%--------------------------------------------------dialog选择数据项------------------------------------------%>
+    <!--------------------------------------------------dialog选择数据项------------------------------------------>
     <div id="dlg_TagItemsList" class="easyui-dialog">
         <div id="TagItemsTabs" class="easyui-tabs" data-options="fit:true, tabPosition:'left'">
             <div title="统计数据" style="padding: 10px;">

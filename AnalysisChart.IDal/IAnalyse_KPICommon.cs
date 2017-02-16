@@ -34,7 +34,8 @@ namespace AnalysisChart.IDal
         /// <param name="myValueType"></param>
         /// <returns></returns>
         DataTable GetComprehensiveStandardItems(string myStatisticalMethod, string myValueType);
-
+        DataTable GetEquipmentCommonInfo(string myOrganizationLineType);
+        DataTable GetSpecificationsInfo(string myEquipmentCommonId);
         /// <summary>
         /// 
         /// </summary>

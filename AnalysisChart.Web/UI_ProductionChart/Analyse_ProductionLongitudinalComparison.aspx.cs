@@ -45,12 +45,12 @@ namespace AnalysisChart.Web.UI_ProductionChart
             return myValueJson;
         }
         [WebMethod]
-        public static string GetStaticsItems(string myValueType, string myEquipmentCommonId)
+        public static string GetStaticsItems(string myValueType, string myEquipmentCommonId, string mySpecificationsId)
         {
             List<string> m_DataValidIdGroup = GetDataValidIdGroup("ProductionOrganization");
             if (m_DataValidIdGroup != null && m_DataValidIdGroup.Count > 0)
             {
-                string StaticsItemsJson = AnalysisChart.Bll.Analyse_ProductionHorizontalComparison.GetStaticsItems(myValueType, myEquipmentCommonId, m_DataValidIdGroup);
+                string StaticsItemsJson = AnalysisChart.Bll.Analyse_ProductionHorizontalComparison.GetStaticsItems(myValueType, myEquipmentCommonId, mySpecificationsId, m_DataValidIdGroup);
                 return StaticsItemsJson;
             }
             else
@@ -110,6 +110,12 @@ namespace AnalysisChart.Web.UI_ProductionChart
         {
             string m_ChartTableJson = AnalysisChart.Bll.Analyse_ProductionLongitudinalComparison.GetChartDataJson(myAnalyseCyc, myStartTime, myEndTime, myChartType, myTagInfoJson);
             return m_ChartTableJson;
+        }
+        [WebMethod]
+        public static string SpecificationsInfo(string myEquipmentCommonId)
+        {
+            string m_DeleteResultJson = AnalysisChart.Bll.Analyse_KPICommon.GetSpecificationsInfo(myEquipmentCommonId);
+            return m_DeleteResultJson;
         }
     }
 }

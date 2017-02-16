@@ -59,25 +59,18 @@ namespace AnalysisChart.Web.UI_ProductionChart
             return m_IndexTagJson;
         }
         [WebMethod]
-        public static string GetStaticsItems(string myValueType, string myEquipmentCommonId)
+        public static string GetStaticsItems(string myValueType, string myEquipmentCommonId, string mySpecificationsId)
         {
             List<string> m_DataValidIdGroup = GetDataValidIdGroup("ProductionOrganization");
             if (m_DataValidIdGroup != null && m_DataValidIdGroup.Count > 0)
             {
-                string StaticsItemsJson = AnalysisChart.Bll.Analyse_ProductionHorizontalComparison.GetStaticsItems(myValueType, myEquipmentCommonId, m_DataValidIdGroup);
+                string StaticsItemsJson = AnalysisChart.Bll.Analyse_ProductionHorizontalComparison.GetStaticsItems(myValueType, myEquipmentCommonId, mySpecificationsId, m_DataValidIdGroup);
                 return StaticsItemsJson;
             }
             else
             {
                 return "{\"rows\":[],\"total\":0}";
             }
-        }
-        [WebMethod]
-        public static string GetEquipmentInfo()
-        {
-            List<string> m_DataValidIdGroup = GetDataValidIdGroup("ProductionOrganization");
-            string m_StaticsItemsJson = AnalysisChart.Bll.Analyse_ProductionHorizontalComparison.GetEquipmentInfo(m_DataValidIdGroup);
-            return m_StaticsItemsJson;
         }
     }
 }

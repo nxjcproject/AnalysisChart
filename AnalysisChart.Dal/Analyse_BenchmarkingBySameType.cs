@@ -119,7 +119,7 @@ namespace AnalysisChart.Dal
                                 from system_Organization A, system_Organization B
                                 where A.LevelType = '{0}'
                                 and A.LevelCode like B.LevelCode + '%'
-                                and B.OrganizationID in {1}";    
+                                and B.OrganizationID in {1}";
             //
             string m_OrganizationIds = "";
 
@@ -155,72 +155,66 @@ namespace AnalysisChart.Dal
                 return null;
             }
         }
-        public DataTable GetStaticsItems(string myOrganizationType, string myModel, List<string> myOrganizations)
+        public DataTable GetStaticsItems(string myOrganizationType, string myModel, string myEquipmentCommonId, string mySpecifications, bool myHiddenMainMachine, string myKeyName, List<string> myOrganizations)
         {
             string m_Sql = "";
             string m_OrganizationTypeE = "";
+            string m_VariableId = "";
             if (myOrganizationType == "熟料")
             {
                 m_OrganizationTypeE = "clinker";
+                m_VariableId = "clinkerBurning";
             }
             else
             {
                 m_OrganizationTypeE = "cementmill";
+                m_VariableId = "cementGrind";
             }
             if (myModel == "ClinkerAndCementmill")
             {
-                m_Sql = @"Select M.OrganizationId as OrganizationId,
-                            M.Name as Name, 
-                            M.LevelCode as LevelCode,
-                            M.VariableId as VariableId,
-                            M.Type as Type,
-                            M.Value as Value 
-                            from (
-                            Select 
-                                A.OrganizationID as OrganizationId, 
-                                A.Name as Name,
-					            A.LevelCode as LevelCode,
-                                '{2}' as VariableId, 
-                                A.Type as Type,
-                                '' as Value
-                                from system_Organization A
-					            where A.Enabled = 1 
-						        and (A.Type in ('{0}') or A.Type = '' or A.Type is null or A.Type = '分厂' or A.Type = '分公司')
-                                and {1}
-                            union all
-                                Select 
-                                A.OrganizationID as OrganizationId,
-                                B.Name as Name, 
-                                C.LevelCode + substring(B.LevelCode,4,len(B.LevelCode) - 3) as LevelCode,
-                                B.VariableId as VariableId,
-                                B.LevelType as Type,
-                                '' as Value
-                                from tz_formula A, formula_FormulaDetail B, system_Organization C
-                                where {3}
-                                and C.Enabled = 1
-                                and C.Type in ('熟料','水泥磨')
-                                and A.OrganizationID in (C.OrganizationID)
-                                and A.Enable = 1
-                                and A.State = 0
-                                and A.KeyID = B.KeyID
-                                and B.LevelType <> 'ProductionLine') M
-                            order by M.LevelCode";
-                string m_SqlConditionTemp1 = @" C.LevelCode like '{0}%' ";
-                string m_SqlCondition1 = "";
-                if (myOrganizations != null)
-                {
-                    for (int i = 0; i < myOrganizations.Count; i++)
-                    {
-                        if (i == 0)
-                        {
-                            m_SqlCondition1 = string.Format(m_SqlConditionTemp1, myOrganizations[i]);
-                        }
-                        else
-                        {
-                            m_SqlCondition1 = m_SqlCondition1 + string.Format("or " + m_SqlConditionTemp1, myOrganizations[i]);
-                        }
-                    }
-                }
+                m_Sql = @"Select 
+                        A.OrganizationID as OrganizationId, 
+                        A.Name as Name,
+					    A.LevelCode as LevelCode,
+                        A.LevelType as Type, 
+                        '' as VariableId,
+                        'balance_Energy' as TagTableName, 
+                        '' as TagDataBase,
+                        '' as Value 
+                        from system_Organization A
+					    where A.Enabled = 1 
+						and (A.LevelType in('Company','Factory')
+                        or (A.LevelType = 'ProductionLine' and A.Type = '{0}'))
+                        and {2}
+                    union
+                        Select 
+                        A.OrganizationID as OrganizationId, 
+                        (Case when C.LevelType = 'ProductionLine' then A.Name else '' end) + C.Name as Name,
+					    A.LevelCode + substring(C.LevelCode,4 ,len(C.LevelCode)-3) as LeveCode,
+                        C.LevelType as Type, 
+                        C.VariableID as VariableId,
+                        'balance_Energy' as TagTableName, 
+                        'NXJC' as TagDataBase,
+                        '' as Value 
+                        from system_Organization A, tz_Formula B, formula_FormulaDetail C, formula_FormulaDetail D {4}
+					    where A.Enabled = 1 
+                        and A.Type = '{0}' 
+                        and B.Type = 2
+                        and B.ENABLE = 1
+                        and B.State = 0
+                        and A.OrganizationID = B.OrganizationID
+                        and B.KeyID = C.KeyID
+                        and A.Type = '{0}' 
+                        and A.LevelType = 'ProductionLine'
+                        and C.LevelType <> 'ProductionLine'
+                        {1}
+                        and {2}
+                        and D.Name like '%{3}%'
+                        and B.KeyID = D.KeyID
+						and CHARINDEX(C.LevelCode, D.LevelCode) > 0
+                        and D.LevelType <> 'ProductionLine'
+                        {5}";
+
                 string m_SqlConditionTemp = @" (A.LevelCode like '{0}%' 
                                        or CHARINDEX(A.LevelCode, '{0}') > 0) ";
                 string m_SqlCondition = "";
@@ -238,13 +232,45 @@ namespace AnalysisChart.Dal
                         }
                     }
                 }
-                if (m_SqlCondition1 != "" && m_SqlCondition != "")
+
+                string m_LevelType = "";
+                if (myHiddenMainMachine == true)      //如果是电耗并且隐藏主要设备
                 {
-                    m_Sql = string.Format(m_Sql, myOrganizationType, "(" + m_SqlCondition + ")", m_OrganizationTypeE, "(" + m_SqlCondition1 + ")");
+                    m_LevelType = " and C.LevelType in ('ProductionLine','Process') and D.LevelType in ('ProductionLine','Process')";
                 }
                 else
                 {
-                    m_Sql = string.Format(m_Sql, myOrganizationType, "A.OrganizationID <> A.OrganizationID", m_OrganizationTypeE, "A.OrganizationID <> A.OrganizationID");
+                    m_LevelType = " and C.LevelType in ('ProductionLine','Process','MainMachine')";
+                }
+                string m_EquipmentCondition = "";
+                string m_EquipmentDataBase = "";
+                if (myEquipmentCommonId != "All" && myEquipmentCommonId != "")
+                {
+                    m_EquipmentDataBase = ", equipment_EquipmentDetail E";
+                    m_EquipmentCondition = string.Format(@"and D.VariableId = E.VariableId
+                        and B.OrganizationID = E.ProductionLineId
+                        and E.EquipmentCommonId = '{0}'", myEquipmentCommonId);
+                    if (mySpecifications != "All" && mySpecifications != "")
+                    {
+                        m_EquipmentCondition = m_EquipmentCondition + string.Format(" and Specifications = '{0}'", mySpecifications);
+                    }
+                }
+                if (m_SqlCondition != "")
+                {
+                    m_Sql = string.Format(m_Sql, myOrganizationType, m_LevelType, "(" + m_SqlCondition + ")", myKeyName, m_EquipmentDataBase, m_EquipmentCondition);
+                }
+                else
+                {
+                    m_Sql = string.Format(m_Sql, myOrganizationType, m_LevelType, "A.OrganizationID <> A.OrganizationID", myKeyName, m_EquipmentDataBase, m_EquipmentCondition);
+                }
+                try
+                {
+                    DataSet mDataSet_ProductionLine = m_DbDataAdapter.MySqlDbDataAdaper.Fill(null, m_Sql, "StaticsItemsTable");
+                    return mDataSet_ProductionLine.Tables["StaticsItemsTable"];
+                }
+                catch (Exception)
+                {
+                    return null;
                 }
 
             }
@@ -257,10 +283,11 @@ namespace AnalysisChart.Dal
                         '{2}' as VariableId, 
                         A.Type as Type,
                         '' as Value
-                        from system_Organization A
+                        from system_Organization A {3}
 					    where A.Enabled = 1 
 						and (A.Type in ('{0}') or A.Type = '' or A.Type is null or A.Type = '分厂' or A.Type = '分公司')
-                        and {1}";
+                        and {1}
+                        {4}";
                 string m_SqlConditionTemp = @" (A.LevelCode like '{0}%' 
                                        or CHARINDEX(A.LevelCode, '{0}') > 0) ";
                 string m_SqlCondition = "";
@@ -278,16 +305,32 @@ namespace AnalysisChart.Dal
                         }
                     }
                 }
+                string m_EquipmentCondition = "";
+                string m_EquipmentDataBase = "";
+                if (mySpecifications != "All" && mySpecifications != "")
+                {
+                    m_EquipmentDataBase = ", system_Organization B, tz_Formula C, equipment_EquipmentDetail D";
+                    m_EquipmentCondition = string.Format(@"and CHARINDEX(A.LevelCode, B.LevelCode) > 0
+					    and B.Enabled = 1 
+						and B.LevelType = 'ProductionLine'
+						and B.OrganizationID = C.OrganizationID
+						and C.Type = 2
+						and C.ENABLE = 1
+						and C.State = 0
+						and C.OrganizationID = D.ProductionLineId
+						and D.VariableId = '{0}'
+                        and D.Specifications = '{1}'", m_VariableId, mySpecifications);
+                }
                 if (m_SqlCondition != "")
                 {
-                    m_Sql = string.Format(m_Sql, myOrganizationType, "(" + m_SqlCondition + ")", m_OrganizationTypeE);
+                    m_Sql = string.Format(m_Sql, myOrganizationType, "(" + m_SqlCondition + ")", m_OrganizationTypeE, m_EquipmentDataBase, m_EquipmentCondition);
                 }
                 else
                 {
-                    m_Sql = string.Format(m_Sql, myOrganizationType, "A.OrganizationID <> A.OrganizationID", m_OrganizationTypeE);
+                    m_Sql = string.Format(m_Sql, myOrganizationType, "A.OrganizationID <> A.OrganizationID", m_OrganizationTypeE, m_EquipmentDataBase, m_EquipmentCondition);
                 }
             }
-            
+
             try
             {
                 DataSet mDataSet_ProductionLine = m_DbDataAdapter.MySqlDbDataAdaper.Fill(null, m_Sql, "StaticsItemsTable");
@@ -300,3 +343,6 @@ namespace AnalysisChart.Dal
         }
     }
 }
+
+
+//, tz_Formula B, formula_FormulaDetail C, equipment_EquipmentDetail D

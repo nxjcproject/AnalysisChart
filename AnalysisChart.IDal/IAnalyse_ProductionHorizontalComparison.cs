@@ -8,6 +8,6 @@ namespace AnalysisChart.IDal
     public interface IAnalyse_ProductionHorizontalComparison
     {
         DataTable GetEquipmentInfo(List<string> myDataValidIdGroup);
-        DataTable GetStaticsItems(string myValueType, string myEquipmentCommonId, List<string> myOrganizations);
+        DataTable GetStaticsItems(string myValueType, string myEquipmentCommonId, string mySpecificationsId, List<string> myOrganizations);
     }
 }

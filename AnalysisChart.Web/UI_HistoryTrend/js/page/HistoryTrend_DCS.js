@@ -100,19 +100,29 @@ function QueryHistoryTrend() {
                         alert("生成趋势失败!");
                     }
                     else {
+
                         var m_WindowContainerId = 'Windows_Container';
                         if (IsFirstLoadChart == true) {
                             IsFirstLoadChart = false;
                         }
                         else {
-                            ReleaseGridChartObj(m_WindowContainerId);
+                            var m_WindowsIdArray = GetWindowsIdArray();
+                            for (var i = 0; i < m_WindowsIdArray.length; i++) {
+                                if (m_WindowsIdArray[i] != "") {
+                                    ReleaseAllGridChartObj(m_WindowsIdArray[i]);
+                                }
+                            }
+                            CloseAllWindows();
                         }
-                        CreateGridChart(m_MsgData, m_WindowContainerId, true, "DateXLine");
+
+
+                        /////////////////////判断超数量的图表///////////////////////
+                        var m_ContainerObj = $('#Windows_Container');
+                        var m_ContainerObjWidth = m_ContainerObj.width();
+                        var m_ContainerObjHeight = m_ContainerObj.height();
+                        WindowsDialogOpen(m_WindowContainerId, m_MsgData, m_ContainerObjWidth, m_ContainerObjHeight);
                     }
 
-                    /////////////////////判断超数量的图表///////////////////////
-                    //m_Postion = GetWindowPostion(0, m_WindowContainerId);
-                    //WindowsDialogOpen(m_MsgData, m_WindowContainerId, true, "Line", m_Postion[0], m_Postion[1], m_Postion[2], m_Postion[3], false, m_Maximizable, m_Maximized);
                 }
             });
         }
@@ -154,5 +164,34 @@ function LoadSelectDcsTagsDialog() {
         closed: true,
         cache: false,
         modal: true
+    });
+}
+
+///////////////////////////////////////////打开window窗口//////////////////////////////////////////
+function WindowsDialogOpen(myContainerId, myData, myWidth, myHeight) {
+    var m_WindowId = OpenWindows(myContainerId, 'DCS数据分析', myWidth, myHeight); //弹出windows
+    var m_WindowObj = $('#' + m_WindowId);
+    CreateGridChart(myData, m_WindowId, true, "DateXLine");               //生成图表
+    //if (myMaximized != true) {
+    //    ChangeSize(m_WindowId);
+    //}
+    m_WindowObj.window({
+        onBeforeClose: function () {
+            ///////////////////////释放图形空间///////////////
+            //var m_ContainerId = GetWindowIdByObj($(this));
+            ReleaseGridChartObj(m_WindowId);
+            CloseWindow($(this))
+        },
+        onMaximize: function () {
+            TopWindow(m_WindowId);
+            ChangeSize(m_WindowId);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+
+        },
+        onRestore: function () {
+            //TopWindow(m_WindowId);
+            ChangeSize(m_WindowId);
+            //CreateGridChart(myData, m_WindowId, myIsShowGrid, myChartType);
+        }
     });
 }

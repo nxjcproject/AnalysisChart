@@ -59,6 +59,17 @@ namespace AnalysisChart.Bll
             return EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_StandardItems);
         }
 
+        /////////////////////////////增加规格型号//////////////////////////
+        public static string GetEquipmentCommonInfo(string myOrganizationLineType)
+        {
+            DataTable m_EquipmentCommonInfoTable = dal_IAnalyse_KPICommon.GetEquipmentCommonInfo(myOrganizationLineType);
+            return EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_EquipmentCommonInfoTable);
+        }
+        public static string GetSpecificationsInfo(string myEquipmentCommonId)
+        {
+            DataTable m_StandardItems = dal_IAnalyse_KPICommon.GetSpecificationsInfo(myEquipmentCommonId);
+            return EasyUIJsonParser.DataGridJsonParser.DataTableToJson(m_StandardItems);
+        }
         ////////////////////////////以下是自定义标签组的操作///////////////////////////////
         /// <summary>
         /// ////////////////////////////////
@@ -493,8 +504,6 @@ namespace AnalysisChart.Bll
             }
         }
 
-
-
         public static decimal GetComprehensiveConsumptionData(string myVariableId, string myStartTime, string myEndTime, string myLevelCode, string myStaticsCycle)
         {
             if (myVariableId == "clinker_ElectricityConsumption_Comprehensive")    //熟料综合电耗
@@ -618,5 +627,6 @@ namespace AnalysisChart.Bll
                 UpDownLoadFiles.DownloadFile.ExportExcelFile(myFileName, myData);
             }
         }
+
     }
 }

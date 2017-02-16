@@ -24,3 +24,10 @@ C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Debug\AnalysisChart.IDal.csprojResolveAssemblyReference.cache
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Debug\AnalysisChart.IDal.dll
 C:\工作\编程\恒拓软件\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Debug\AnalysisChart.IDal.pdb
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Debug\AnalysisChart.IDal.dll
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Debug\AnalysisChart.IDal.pdb
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Debug\AnalysisChart.Model.dll
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\bin\Debug\AnalysisChart.Model.pdb
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Debug\AnalysisChart.IDal.csprojResolveAssemblyReference.cache
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Debug\AnalysisChart.IDal.dll
+C:\工作\编程\三层框架V3.1\AnalysisChart\AnalysisChart.IDal\obj\Debug\AnalysisChart.IDal.pdb

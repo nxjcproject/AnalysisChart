@@ -55,10 +55,10 @@ namespace AnalysisChart.Bll
                     m_UnitX = "月份";
                     DateTime m_DateTime = DateTime.Parse(myStartTime);
                     m_StartTime = m_DateTime.ToString("yyyy") + "-01-01";
-                    m_EndTime = m_DateTime.AddYears(1).ToString("yyyy") + "-01-01";
+                    m_EndTime = m_DateTime.ToString("yyyy") + "-12-31";
 
                     m_LastCycStartTime = m_DateTime.AddYears(-1).ToString("yyyy") + "-01-01";
-                    m_LastCycEndTime = m_StartTime;
+                    m_LastCycEndTime = m_DateTime.AddYears(-1).ToString("yyyy") + "-12-31";
 
                     m_StaticsCycleType = StaticsCycleMonth;
                 }
@@ -67,10 +67,10 @@ namespace AnalysisChart.Bll
                     m_UnitX = "天";
                     DateTime m_DateTime = DateTime.Parse(myStartTime);
                     m_StartTime = m_DateTime.ToString("yyyy-MM") + "-01";
-                    m_EndTime = m_DateTime.AddMonths(1).ToString("yyyy-MM") + "-01";
+                    m_EndTime = DateTime.Parse(m_StartTime).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd");
 
                     m_LastCycStartTime = m_DateTime.AddYears(-1).ToString("yyyy-MM") + "-01";
-                    m_LastCycEndTime = m_DateTime.AddMonths(1).AddYears(-1).ToString("yyyy-MM") + "-01";
+                    m_LastCycEndTime = DateTime.Parse(m_LastCycStartTime).AddMonths(1).AddDays(-1).ToString("yyyy-MM-dd");
 
                     m_StaticsCycleType = StaticsCycleDay;
                 }
@@ -80,11 +80,11 @@ namespace AnalysisChart.Bll
                     DateTime m_EndDateTime = DateTime.Parse(myEndTime);
                     m_UnitX = "天";
                     m_StartTime = myStartTime;
-                    m_EndTime = m_EndDateTime.AddDays(1).ToString("yyyy-MM-dd");
+                    m_EndTime = m_EndDateTime.ToString("yyyy-MM-dd");
 
 
                     m_LastCycStartTime = m_StartDateTime.AddYears(-1).ToString("yyyy-MM-dd");
-                    m_LastCycEndTime = m_EndDateTime.AddDays(1).AddYears(-1).ToString("yyyy-MM-dd");
+                    m_LastCycEndTime = m_EndDateTime.AddYears(-1).ToString("yyyy-MM-dd");
 
                     m_StaticsCycleType = StaticsCycleDay;
                 }
@@ -134,16 +134,18 @@ namespace AnalysisChart.Bll
                     else if (m_TagTabClass == EntityProductionStatics)               //工序指标
                     {
                         string m_VaribleId = m_DataRow["TagId"].ToString();
-                        string m_OrganizationId = m_DataRow["TagItemId"].ToString();
+                        //string m_OrganizationId = m_DataRow["TagTable"].ToString();
                         ///////////////获得标签数据
                         DataTable m_TagValues = null;
                         if (TimeOfLastCycName == m_DataRow["SameTimeOfLastCyc"].ToString())        //如果是去年同期
                         {
-                            m_TagValues = RunIndicators.EquipmentRunIndicators.GetEquipmentUtilizationPerMonth(m_TagItemId, m_OrganizationId, m_VaribleId, m_LastCycStartTime, m_LastCycEndTime, m_SqlServerDataAdapter);
+                            string m_FactoryOrganzationId = GetFactoryOrganzationId(m_DataRow["TagTable"].ToString(), m_SqlServerDataAdapter);
+                            m_TagValues = RunIndicators.EquipmentRunIndicators.GetEquipmentUtilizationPerMonth(m_TagItemId, m_FactoryOrganzationId, m_VaribleId, m_LastCycStartTime, m_LastCycEndTime, m_SqlServerDataAdapter);
                         }
                         else
                         {
-                            m_TagValues = RunIndicators.EquipmentRunIndicators.GetEquipmentUtilizationPerMonth(m_TagItemId, m_OrganizationId, m_VaribleId, m_StartTime, m_EndTime, m_SqlServerDataAdapter);
+                            string m_FactoryOrganzationId = GetFactoryOrganzationId(m_DataRow["TagTable"].ToString(), m_SqlServerDataAdapter);
+                            m_TagValues = RunIndicators.EquipmentRunIndicators.GetEquipmentUtilizationPerMonth(m_TagItemId, m_FactoryOrganzationId, m_VaribleId, m_StartTime, m_EndTime, m_SqlServerDataAdapter);
                         }
                         if (m_TagValues != null)
                         {
@@ -182,6 +184,25 @@ namespace AnalysisChart.Bll
             {
                 return "{\"rows\":[],\"total\":0}";
             }
+        }
+        private static string GetFactoryOrganzationId(string myOrganzationId, SqlServerDataAdapter.SqlServerDataFactory mySqlServerDataAdapter)
+        {
+            string m_Sql = @"select E.OrganizationID as OrganizationId,E.LevelCode as FactoryLevelCode,F.LevelCode as ParmeterLevelCode from system_Organization E, system_Organization F
+                                where F.OrganizationID = '{0}'
+                                and CHARINDEX(E.LevelCode, F.LevelCode) > 0
+                                and E.LevelType = 'Factory'";
+            m_Sql = string.Format(m_Sql, myOrganzationId);
+
+            DataTable m_FactoryOrganzationTable = mySqlServerDataAdapter.Query(m_Sql);
+            if (m_FactoryOrganzationTable != null && m_FactoryOrganzationTable.Rows.Count > 0)
+            {
+                return m_FactoryOrganzationTable.Rows[0]["OrganizationId"].ToString();
+            }
+            else
+            {
+                return myOrganzationId;
+            }
+
         }
         /// <summary>
         /// 获得形成Chart的表结构
@@ -223,7 +244,7 @@ namespace AnalysisChart.Bll
                 {
                     DateTime m_StartDateTime = DateTime.Parse(myStartTime);
                     DateTime m_EndDateTime = DateTime.Parse(myEndTime);
-                    while (m_StartDateTime < m_EndDateTime)
+                    while (m_StartDateTime <= m_EndDateTime)
                     {
                         //m_DataTable.Columns.Add(m_StartDateTime.ToString("yyyyMMdd"), typeof(decimal));
                         m_DataTable.Columns.Add(m_StartDateTime.ToString("MMdd"), typeof(decimal));
@@ -261,11 +282,13 @@ namespace AnalysisChart.Bll
             {
                 m_DataColumnsItem[j] = "0";
                 m_TagValuesIndex = 0;
-                while (m_TagValuesIndex < myTagValues.Rows.Count)
+                while (m_TagValuesIndex < myTagValues.Columns.Count)
                 {
-                    if (myChartDataTableStruct.Columns[j].ColumnName == myTagValues.Rows[m_TagValuesIndex]["VDate"].ToString())
+                    string m_StructColumnName = myChartDataTableStruct.Columns[j].ColumnName;
+                    string m_ValueColumnName = myTagValues.Columns[m_TagValuesIndex].ColumnName.Substring(myTagValues.Columns[m_TagValuesIndex].ColumnName.Length - 2);
+                    if (m_StructColumnName == m_ValueColumnName)
                     {
-                        m_DataColumnsItem[j] = myTagValues.Rows[m_TagValuesIndex]["TagValue"].ToString();
+                        m_DataColumnsItem[j] = myTagValues.Rows[0][myTagValues.Columns[m_TagValuesIndex].ColumnName].ToString();
                         break;
                     }
                     m_TagValuesIndex = m_TagValuesIndex + 1;

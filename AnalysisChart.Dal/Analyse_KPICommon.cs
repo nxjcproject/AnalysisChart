@@ -152,6 +152,48 @@ namespace AnalysisChart.Dal
                 return null;
             }
         }
+        public DataTable GetEquipmentCommonInfo(string myOrganizationLineType)
+        {
+            string m_Sql = @"SELECT distinct B.EquipmentCommonId as id, 
+                                  B.Name as text
+                                  FROM equipment_EquipmentDetail A,equipment_EquipmentCommonInfo B, system_Organization C
+                                  where A.Enabled = 1
+                                  and A.EquipmentCommonId = B.EquipmentCommonId
+                                  and C.Type = '{0}'
+                                  and A.ProductionLineId = C.OrganizationID
+								  and C.LevelType = 'ProductionLine'";
+            m_Sql = string.Format(m_Sql, myOrganizationLineType);
+            try
+            {
+                DataSet mDataSet_EquipmentCommonInfo = m_DbDataAdapter.MySqlDbDataAdaper.Fill(null, m_Sql, "EquipmentCommonInfo");
+                return mDataSet_EquipmentCommonInfo.Tables["EquipmentCommonInfo"];
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        public DataTable GetSpecificationsInfo(string myEquipmentCommonId)
+        {
+            string m_Sql = @"SELECT distinct A.Specifications as id, 
+                                  A.Specifications as text
+                                  FROM equipment_EquipmentDetail A,equipment_EquipmentCommonInfo B
+                                  where A.Enabled = 1
+                                  and A.Specifications is not null
+                                  and A.Specifications <> ''
+                                  and A.EquipmentCommonId = B.EquipmentCommonId
+                                  and B.EquipmentCommonId = '{0}'";
+            m_Sql = string.Format(m_Sql, myEquipmentCommonId);
+            try
+            {
+                DataSet mDataSet_SpecificationsInfo = m_DbDataAdapter.MySqlDbDataAdaper.Fill(null, m_Sql, "SpecificationsInfo");
+                return mDataSet_SpecificationsInfo.Tables["SpecificationsInfo"];
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
         public DataTable GetDayDCSData(string myDataBaseName, string myDataTableName, string myFieldName, string myStartTime, string myEndTime, bool myIsCumulant)
         {
             string m_FieldStringTemplate = "";
