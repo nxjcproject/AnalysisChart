@@ -73,20 +73,20 @@
                 <div class="easyui-panel" data-options="region:'north', border:false, collapsible:false, split:false" style="height: 30px;">
                     <table>
                         <tr>
-                            <td style="width: 65px;">选择年份</td>
-                            <td style="text-align: left; width: 110px;">
+                            <td style="width: 60px; text-align: right;">选择年份</td>
+                            <td>
                                 <input id="Numberspinner_QueryDate" class="easyui-numberspinner" style="width: 80px;" data-options="min:1900, max:2200, editable:false" />
                             </td>
-                            <td style="width: 65px;">选择统计项</td>
-                            <td style="text-align: left; width: 310px;">
-                                <input id="Combobox_GetTagItems" class="easyui-combobox" style="width: 300px;" />
-                            </td>
-                            <td style="width: 100px;">已选择组织机构</td>
+                            <td style="width: 70px; text-align: right;">选择统计项</td>
                             <td>
-                                <input id="TextBox_OrganizationText" class="easyui-textbox" data-options="editable:false" style="width: 150px;" />
+                                <input id="Combobox_GetTagItems" class="easyui-combobox" style="width: 180px;" />
+                            </td>
+                            <td style="width: 60px; text-align: right;">组织机构</td>
+                            <td>
+                                <input id="TextBox_OrganizationText" class="easyui-textbox" data-options="editable:false" style="width: 120px;" />
                             </td>
                             <td>
-                                <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true"
+                                <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'"
                                     onclick="QueryStaticsDataFun();">查询</a>
                             </td>
                         </tr>
